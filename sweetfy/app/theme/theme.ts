@@ -88,7 +88,7 @@ const typography= {
 const colors ={
     brown: '#9C503B',
     darkBrown: '#5f3124',
-    lighBrown: '#F5EEEB',
+    lightBrown: '#F5EEEB',
     yellow: '#FBEAA4',
     yellowLight: '#FFFFFD',
     inputWhite: '#FFFFFF',
@@ -103,7 +103,7 @@ export type ButtonVariantTypes = 'brownLight' | 'outlined' | 'yellow';
 export const buttonVariants: Record<ButtonVariantTypes, Partial<ButtonProps>> = {
   brownLight: {
     mode: 'contained', 
-    buttonColor: colors.lighBrown,
+    buttonColor: colors.lightBrown,
     textColor: colors.brown,
   },
   outlined: {
