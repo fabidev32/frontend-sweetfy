@@ -24,6 +24,30 @@ const RegisterPageComponent = () => {
 
   const router = useRouter();
 
+  const handleRegister = async () => {
+    const userNameBasedOnFullName = fullName.split(' ')[0];
+    try {
+      setLoading(true);
+      await fetchRegister({
+        userName: userNameBasedOnFullName + '_user',
+        fullName,
+        email,
+        password,
+        bakeryName,
+      });
+      setResponseStatusMessage('success');
+      setTimeout(() => {
+        router.replace('/login');
+      }, 1500);
+    } catch (e) {
+      console.error(e);
+      setResponseStatusMessage('error');
+    } finally {
+      setLoading(false);
+      setShowResponseStatus(true);
+    }
+  };
+
   return (
     <AuthTemplate subtitle="Cadastre-se e faça parte da nossa comunidade!">
       <InputsContent>
