@@ -1,0 +1,5 @@
+/* Para garantir o radius dos dropdowns */
+div[class*="css-view"][class*="r-borderColor"][class*="r-borderWidth"][class*="r-position"] {
+  border-radius: 8px !important;
+  overflow: hidden !important;
+}
