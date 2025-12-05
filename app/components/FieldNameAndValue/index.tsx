@@ -23,7 +23,7 @@ const FieldNameAndValue: React.FC<FieldNameAndValueProps> = ({
   return (
     <View style={[styles.viewDetails, contentStyle]}>
       <Text style={[styles.text, nameStyle]}>{name}</Text>
-      <Text style={[styles.text, valueStyle]}> {value} </Text>
+      <Text style={[styles.textValue, valueStyle]}>{value} </Text>
     </View>
   );
 };
@@ -33,12 +33,19 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
+    gap: 15,
   },
   text: {
     color: '#5F3124',
     fontFamily: 'Montserrat',
-    fontSize: 18,
+    fontSize: 21,
   },
+  textValue: {
+    color: '#5F3124',
+    fontFamily: 'Montserrat',
+    fontSize: 21,
+
+  }
 });
 
 export default FieldNameAndValue;

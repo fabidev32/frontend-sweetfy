@@ -1,25 +1,19 @@
 import { View, Text, StyleSheet } from 'react-native';
 import React from 'react';
 
-interface Ingredient {
-  id: number;
-  ingredientId: number;
-  ingredientName: string; 
-  quantity: number;
-  unit: string;
-  unitPriceSnapshot: number;
+type ItemsInput = { recipeId: number,
+      quantity: number, }[];
+
+interface ItemsInputProps {
+  items: ItemsInput;
 }
 
-interface IngredientsProps {
-  items: Ingredient[];
-}
-
-const Ingredients = ({ items }: IngredientsProps) => {
+const ItemsInput = ({ items }: ItemsInputProps) => {
   return (
     <View style={styles.container}>
       {items.map((item, index) => (
-        <View key={item.id.toString() || index.toString()} style={styles.viewIngredientes}>
-          <Text style={styles.name}> {item.ingredientName} </Text>
+        <View style={styles.viewIngredientes}>
+          <Text style={styles.name}> {item.recipeId} (ID) </Text>
         </View>
       ))}
     </View>
@@ -48,4 +42,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Ingredients;
+export default ItemsInput;

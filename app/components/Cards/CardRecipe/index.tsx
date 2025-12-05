@@ -2,7 +2,7 @@ import * as React from 'react';
 import { TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import FieldNameAndValue from '@/components/FieldNameAndValue';
-import ListIngredientesInput from '@/components/Items/ListItems';
+import ListIngredientesInput from '@/components/Cards/CardRecipe/ItemsCard';
 import { ViewStyle } from 'react-native';
 
 interface RecipeData {
@@ -13,6 +13,7 @@ interface RecipeData {
   yieldUnit: string;
   preparation: string;
   additionalCostPercent: number;
+  totalCost: number;
   recipeIngredients: any[]; // Usando any[] por enquanto, se a interface for complexa.
 }
 
@@ -25,7 +26,6 @@ interface CardRecipeProps {
   cardStyle?: ViewStyle;
 }
 
-// 3. Estilos (mantidos como importados)
 import {
   ContainerCard,
   ContainerWithCheckBox,
@@ -33,6 +33,7 @@ import {
   TitleCard,
   TextCard,
 } from './style';
+import { fontWeight } from '@/theme/theme';
 
 const CardRecipe: React.FC<CardRecipeProps> = ({
   id,
@@ -43,11 +44,11 @@ const CardRecipe: React.FC<CardRecipeProps> = ({
   cardStyle,
 }) => {
 
+
   const ControllerCheckBox = () => {
     if (!showCheckBox || !functionButtonSelected) {
       return null;
     }
-
     const iconName = checkBoxSelected
       ? 'checkbox-marked'
       : 'checkbox-blank-outline';
@@ -63,6 +64,10 @@ const CardRecipe: React.FC<CardRecipeProps> = ({
     );
   };
 
+
+  const formatCurrency = (value: string) => `R$ ${value.replace('.', ',')}`;
+
+
   return (
     <ContainerWithCheckBox >
       {ControllerCheckBox()}
@@ -70,12 +75,15 @@ const CardRecipe: React.FC<CardRecipeProps> = ({
         <ViewCard>
           <TitleCard>{data.name}</TitleCard>
           <FieldNameAndValue
-            name="Rendimento"
+            name="Rendimento total"
             value={[data.yieldQuantity, data.yieldUnit]}
+            nameStyle={{ fontWeight: 'bold' }}
           />
           <FieldNameAndValue
-            name="Percentual de custo adicional"
-            value={data.additionalCostPercent}
+            name="Custo total"
+            value={formatCurrency(data.totalCost.toFixed(2))}
+            nameStyle={{ fontWeight: 'bold' }}
+            valueStyle={{ width: 150 }}
           />
           <TextCard numberOfLines={5}>{data.preparation}</TextCard>
           <ListIngredientesInput items={data.recipeIngredients} />

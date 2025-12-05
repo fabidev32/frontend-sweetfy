@@ -43,13 +43,16 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         gap: 20,
         borderRadius: 18,
+        backgroundColor: 'white',
+        padding: 12,
+
     },
 
     name: {
         color: '#880741',
         fontFamily: 'Montserrat',
-        fontSize: 11.5,
-        margin: 3,
+        fontSize: 18,
+        margin: 3,        
     },
 });
 

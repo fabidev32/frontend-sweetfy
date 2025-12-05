@@ -52,9 +52,21 @@ const mockRecipes = [
   },
 ];
 
+interface RecipeData {
+  id: number;
+  recipeId: number;
+  name: string;
+  yieldQuantity: number;
+  yieldUnit: string;
+  preparation: string;
+  additionalCostPercent: number;
+  totalCost: number;
+  recipeIngredients: any[];
+}
+
 ////const YOUR_ACCESS_TOKEN = '[SEU_ACCESS_TOKEN_AQUI]';
 
-const HomePage = () => {
+const SeeMoreRecipes = () => {
   const [isSelectionModeActive, setIsSelectionModeActive] = useState(false);
   const [selectedItemIds, setSelectedItemIds] = useState<number[]>([]);
 
@@ -208,15 +220,19 @@ const HomePage = () => {
     fetchAllRecipes();
 
   }, []); */
- 
-    const router = useRouter();
-  
-  const handleNavigateToDetails = (recipeId: number) => {
+
+  const router = useRouter();
+  const handleNavigateToDetailsRecipe = (recipe: RecipeData) => {
+    const recipeDataString = JSON.stringify(recipe);
+
     router.push({
       pathname: "/DetailsRecipe",
-      params: { id: recipeId },
+      params: {
+        recipeData: recipeDataString
+      },
     } as any);
   };
+
   const toggleItemSelection = (itemId: number) => {
     setSelectedItemIds((prevSelected) => {
       if (prevSelected.includes(itemId)) {
@@ -359,8 +375,7 @@ const HomePage = () => {
           </View>
 
           <ListRecipes
-                      onCardPress={handleNavigateToDetails}
-
+            onCardPress={handleNavigateToDetailsRecipe}
             dataRecipe={mockRecipes}
             showSelectionControls={isSelectionModeActive}
             selectedItemIds={selectedItemIds}
@@ -380,4 +395,4 @@ const HomePage = () => {
   );
 };
 
-export default HomePage;
+export default SeeMoreRecipes;

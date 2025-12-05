@@ -1,119 +1,170 @@
 import * as React from 'react';
-import { View, Text } from 'react-native';
+import { View } from 'react-native';
+import { PageText, PageTitle, ViewDescription, ViewContainer, ViewRecipe } from './style';
 import FieldNameAndValue from '@/components/FieldNameAndValue';
 import Ingredients from "@/components/Items/ContainerItems/Ingredients/index";
 import Service from "@/components/Items/ContainerItems/Services/index";
-import { H3 } from '@/theme/fontsTheme';
+import { useLocalSearchParams } from 'expo-router';
+import { useCallback, useMemo, useState } from 'react';
+import { fontSize } from '@/theme/theme';
 
-const mockRecipes = [
-  // ... Receita 1 ...
-  {
-    id: 1,
-    recipeId: 1,
-    name: 'Brigadeiro Simples',
-    yieldQuantity: 20,
-    yieldUnit: 'unidades',
-    preparation: 'Coloque o leite condesado, a manteiga, e o chocolate. Misture até ferver',
-    additionalCostPercent: 5,
-    recipeIngredients: [
-      { id: 1, ingredientId: 1, ingredientName: 'Leite Condensado', quantity: 1, unit: 'lata', unitPriceSnapshot: 5 },
-    ],
-    services: [
-      { "id": 1, "serviceId": 1, "serviceName": "Uber", "quantity": 1, "unitPriceSnapshot": 20 }
-    ]
-  },
-  // ... Receita 2 ...
-  {
-    id: 2,
-    recipeId: 2,
-    name: 'Brigadeiro Gourmet',
-    yieldQuantity: 15,
-    yieldUnit: 'unidades',
-    preparation: 'Utilize chocolate nobre e siga o processo de temperagem.',
-    additionalCostPercent: 10,
-    recipeIngredients: [
-      { id: 2, ingredientId: 2, ingredientName: 'Chocolate Nobre', quantity: 300, unit: 'g', unitPriceSnapshot: 15 },
-    ],
-    services: [], 
-  },
-];
-
-interface PropsPageDetails {
+interface RecipeIngredient {
   id: number;
+  ingredientId: number;
+  ingredientName: string;
+  quantity: number;
+  unit: string;
+  unitPriceSnapshot: number;
 }
 
-const PageDetailsRecipe = ({ id }: PropsPageDetails) => {
+interface RecipeService {
+  id: number;
+  serviceId: number;
+  serviceName: string;
+  quantity: number;
+  unitPriceSnapshot: number;
+}
 
-  const recipe = mockRecipes.find(r => r.id === id); 
-  
-  const [ingredientCosts, setIngredientCosts] = React.useState<Record<number, number>>({});
-  const [serviceCosts, setServiceCosts] = React.useState<Record<number, number>>({});
+interface RecipeData {
+  id: number;
+  recipeId: number;
+  name: string;
+  yieldQuantity: number;
+  yieldUnit: string;
+  preparation: string;
+  additionalCostPercent: number;
+  recipeIngredients: RecipeIngredient[];
+  services: RecipeService[];
+}
+
+interface RecipeDataWithCost extends RecipeData {
+  totalCost: number;
+}
+
+const calculateItemCost = (price: number, quantity: number) => {
+  const p = typeof price === 'number' ? price : 0;
+  const q = typeof quantity === 'number' ? quantity : 0;
+  return p * q;
+};
+
+const PageDetailsRecipe = () => {
+
+  const [ingredientCosts, setIngredientCosts] = useState<Record<number, number>>({});
+  const [serviceCosts, setServiceCosts] = useState<Record<number, number>>({});
+
+  const params = useLocalSearchParams();
+  const recipeDataParam = params.recipeData;
+
+  const recipeDataJson = Array.isArray(recipeDataParam) ? recipeDataParam[0] : recipeDataParam;
+
+  const recipe: RecipeDataWithCost | null = recipeDataJson
+    ? JSON.parse(recipeDataJson as string)
+    : null;
 
   if (!recipe) {
-    return <Text>Receita não encontrada.</Text>;
+    return <PageText>Receita não encontrada.</PageText>;
   }
 
-  const updateIngredientCost = React.useCallback((itemId: number, cost: number) => {
+  React.useEffect(() => {
+
+    if (!recipe) return;
+
+    const initialIngredientCosts = (recipe.recipeIngredients || []).reduce((acc, item) => {
+      acc[item.id] = calculateItemCost(item.unitPriceSnapshot, item.quantity);
+      return acc;
+    }, {} as Record<number, number>);
+
+    const initialServiceCosts = (recipe.services || []).reduce((acc, item) => {
+      acc[item.id] = calculateItemCost(item.unitPriceSnapshot, item.quantity);
+      return acc;
+    }, {} as Record<number, number>);
+
+    setIngredientCosts(initialIngredientCosts);
+    setServiceCosts(initialServiceCosts);
+
+  }, [recipe.id]);
+
+
+  const updateIngredientCost = useCallback((itemId: number, cost: number) => {
     setIngredientCosts(prevCosts => ({
       ...prevCosts,
       [itemId]: cost,
     }));
   }, []);
 
-  const updateServiceCost = React.useCallback((itemId: number, cost: number) => {
+  const updateServiceCost = useCallback((itemId: number, cost: number) => {
     setServiceCosts(prevCosts => ({
       ...prevCosts,
       [itemId]: cost,
     }));
   }, []);
 
-  const totalCostValue = React.useMemo(() => {
+
+
+  const totalCostValue = useMemo(() => {
+
     const ingredientsBaseCost = Object.values(ingredientCosts).reduce((sum, cost) => sum + cost, 0);
     const servicesBaseCost = Object.values(serviceCosts).reduce((sum, cost) => sum + cost, 0);
+
     const baseCost = ingredientsBaseCost + servicesBaseCost;
-    
-    const additionalCost = baseCost * (recipe.additionalCostPercent / 100); 
-    
+
+    if (baseCost === 0 && recipe.totalCost > 0) {
+      return String(recipe.totalCost.toFixed(2));
+    }
+
+    const additionalCost = baseCost * (recipe.additionalCostPercent / 100);
+
     return (baseCost + additionalCost).toFixed(2);
-  }, [ingredientCosts, serviceCosts, recipe.additionalCostPercent]); 
-  
+
+  }, [ingredientCosts, serviceCosts, recipe.additionalCostPercent, recipe.totalCost]);
   const formatYield = `${recipe.yieldQuantity} ${recipe.yieldUnit}`;
   const formatCurrency = (value: string) => `R$ ${value.replace('.', ',')}`;
 
+
   return (
-    <View>
-      <H3> {recipe.name} </H3>
+    <ViewContainer>
+      <ViewRecipe>
+        <ViewDescription>
+          <PageTitle> {recipe.name} </PageTitle>
 
-      <FieldNameAndValue
-        name="Rendimento"
-        value={formatYield}
-      />
-      <FieldNameAndValue
-        name="Custo total"
-        value={formatCurrency(totalCostValue)} 
-      />
-      <Text> {recipe.preparation}</Text>
-
-      <View>
-        {recipe.recipeIngredients?.map((item) => (
-          <Ingredients 
-            key={item.id} 
-            data={item} 
-            onCostCalculated={updateIngredientCost} 
+          <FieldNameAndValue
+            name="Rendimento"
+            value={formatYield}
+            nameStyle={{ fontSize: 25, fontWeight: 'bold' }}
+            valueStyle={{ fontSize: 25 }}
           />
-        ))}
-      </View>
-
-      <View>
-        {recipe.services?.map((item) => (
-          <Service 
-            key={item.id} 
-            data={item} 
-            onCostCalculated={updateServiceCost} 
+          <FieldNameAndValue
+            name="Custo total"
+            value={formatCurrency(totalCostValue)}
+            nameStyle={{ fontSize: 25, fontWeight: 'bold' }}
+            valueStyle={{ fontSize: 25 }}
           />
-        ))}
-      </View>
-    </View>
+          <PageText> {recipe.preparation}</PageText>
+
+
+
+          <View>
+            {recipe.recipeIngredients?.map((item) => (
+              <Ingredients
+                key={item.id}
+                data={item}
+                onCostCalculated={updateIngredientCost}
+              />
+            ))}
+          </View>
+
+          <View>
+            {recipe.services?.map((item) => (
+              <Service
+                key={item.id}
+                data={item}
+                onCostCalculated={updateServiceCost}
+              />
+            ))}
+          </View>
+        </ViewDescription>
+      </ViewRecipe>
+    </ViewContainer>
   );
 };
 

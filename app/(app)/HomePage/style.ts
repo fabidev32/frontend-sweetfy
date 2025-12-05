@@ -3,21 +3,29 @@ import styled from 'styled-components/native';
 export const ContainerListOFCards = styled.View`
   display: flex;
   flex-direction: column;
-  background-color: '#f5c0b3ff';
+  background-color: #f3e9e7ff;
 `;
 
-export const ViewTitle = styled.View`
+// Componente para o título, aceita as propriedades de fonte
+export const TitleText = styled.Text`
   font-size: 30px;
   font-weight: bold;
-  font-color: '#5f3124';
-  margin: 10px;
+  color: #5f3124;
 `;
 
+// Contêiner para o layout do título e botão
 export const ViewButtonTitle = styled.View`
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  font-color: '#5f3124';
-  font-weight: bold;
 `;
+
+export const Title = styled.Text`
+   font-size: 30px;
+   font-weight: bold;
+   font-color: #5f3124;
+   margin: 5px;
+
+`;
+
