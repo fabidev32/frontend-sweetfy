@@ -1,12 +1,14 @@
 import * as React from 'react';
-import { View } from 'react-native';
+import { View,ScrollView } from 'react-native';
 import { PageText, PageTitle, ViewDescription, ViewContainer, ViewRecipe } from './style';
 import FieldNameAndValue from '@/components/FieldNameAndValue';
-import Ingredients from "@/components/Items/ContainerItems/Ingredients/index";
-import Service from "@/components/Items/ContainerItems/Services/index";
+import Ingredients from "@/components/Items/Ingredients/index";
+import Service from "@/components/Items/Services/index";
 import { useLocalSearchParams } from 'expo-router';
 import { useCallback, useMemo, useState } from 'react';
-import { fontSize } from '@/theme/theme';
+import { calculateRecipeTotalCost, applyRecipeMargin } from '@/utils/costCalculator';
+
+
 
 interface RecipeIngredient {
   id: number;
@@ -14,15 +16,18 @@ interface RecipeIngredient {
   ingredientName: string;
   quantity: number;
   unit: string;
-  unitPriceSnapshot: number;
+  unitPriceSnapshot: number | string | undefined | null;
+  itemCost?: number;
 }
 
 interface RecipeService {
   id: number;
-  serviceId: number;
-  serviceName: string;
+  name: string;
+  description: string;
+  providerName: string;
+  unit: string;
+  unitPrice: number;
   quantity: number;
-  unitPriceSnapshot: number;
 }
 
 interface RecipeData {
@@ -31,6 +36,7 @@ interface RecipeData {
   name: string;
   yieldQuantity: number;
   yieldUnit: string;
+  quantity: number;
   preparation: string;
   additionalCostPercent: number;
   recipeIngredients: RecipeIngredient[];
@@ -41,11 +47,13 @@ interface RecipeDataWithCost extends RecipeData {
   totalCost: number;
 }
 
-const calculateItemCost = (price: number, quantity: number) => {
-  const p = typeof price === 'number' ? price : 0;
-  const q = typeof quantity === 'number' ? quantity : 0;
+const calculateItemCost = (price: number | string | undefined | null, quantity: number | string | undefined | null) => {
+  const p = parseFloat(price as any) || 0;
+  const q = parseFloat(quantity as any) || 0;
   return p * q;
 };
+
+
 
 const PageDetailsRecipe = () => {
 
@@ -54,9 +62,7 @@ const PageDetailsRecipe = () => {
 
   const params = useLocalSearchParams();
   const recipeDataParam = params.recipeData;
-
   const recipeDataJson = Array.isArray(recipeDataParam) ? recipeDataParam[0] : recipeDataParam;
-
   const recipe: RecipeDataWithCost | null = recipeDataJson
     ? JSON.parse(recipeDataJson as string)
     : null;
@@ -64,6 +70,8 @@ const PageDetailsRecipe = () => {
   if (!recipe) {
     return <PageText>Receita não encontrada.</PageText>;
   }
+
+  let quantityServices = 0;
 
   React.useEffect(() => {
 
@@ -75,7 +83,9 @@ const PageDetailsRecipe = () => {
     }, {} as Record<number, number>);
 
     const initialServiceCosts = (recipe.services || []).reduce((acc, item) => {
-      acc[item.id] = calculateItemCost(item.unitPriceSnapshot, item.quantity);
+      quantityServices += 1;
+      const cost = (item.unitPrice || 0) * 1;
+      acc[item.id] = cost;
       return acc;
     }, {} as Record<number, number>);
 
@@ -100,28 +110,27 @@ const PageDetailsRecipe = () => {
   }, []);
 
 
-
   const totalCostValue = useMemo(() => {
-
     const ingredientsBaseCost = Object.values(ingredientCosts).reduce((sum, cost) => sum + cost, 0);
     const servicesBaseCost = Object.values(serviceCosts).reduce((sum, cost) => sum + cost, 0);
-
     const baseCost = ingredientsBaseCost + servicesBaseCost;
 
     if (baseCost === 0 && recipe.totalCost > 0) {
       return String(recipe.totalCost.toFixed(2));
     }
 
-    const additionalCost = baseCost * (recipe.additionalCostPercent / 100);
+    const finalCost = applyRecipeMargin(baseCost, recipe.additionalCostPercent);
 
-    return (baseCost + additionalCost).toFixed(2);
+    return finalCost.toFixed(2);
 
   }, [ingredientCosts, serviceCosts, recipe.additionalCostPercent, recipe.totalCost]);
+
   const formatYield = `${recipe.yieldQuantity} ${recipe.yieldUnit}`;
   const formatCurrency = (value: string) => `R$ ${value.replace('.', ',')}`;
 
 
   return (
+    <ScrollView>
     <ViewContainer>
       <ViewRecipe>
         <ViewDescription>
@@ -141,6 +150,7 @@ const PageDetailsRecipe = () => {
           />
           <PageText> {recipe.preparation}</PageText>
 
+          <PageTitle> Gastos totais </PageTitle>
 
 
           <View>
@@ -159,12 +169,14 @@ const PageDetailsRecipe = () => {
                 key={item.id}
                 data={item}
                 onCostCalculated={updateServiceCost}
+                quantity={item.quantity}
               />
             ))}
           </View>
         </ViewDescription>
       </ViewRecipe>
     </ViewContainer>
+  </ScrollView>
   );
 };
 

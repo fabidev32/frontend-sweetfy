@@ -3,6 +3,7 @@ import ListProducts from '../../components/ListOfCards/ListProducts/index'
 import { TouchableOpacity, ScrollView, View } from 'react-native';
 import { ContainerListOFCards, ViewButtonTitle, Title } from './style';
 import { useRouter } from 'expo-router';
+import { ProductData } from '@/components/Cards/CardProduct';
 
 const mockRecipes = [
   {
@@ -24,6 +25,16 @@ const mockRecipes = [
         unitPriceSnapshot: 5,
       },
     ],
+    productServices: [
+      {
+        id: 1,
+        name: "Uber",
+        description: "Entrega",
+        providerName: "Marcelo",
+        unit: "Dinheiro",
+        unitPrice: 10,
+      }
+    ]
   },
 
   {
@@ -44,33 +55,66 @@ const mockRecipes = [
         unitPriceSnapshot: 15,
       },
     ],
-  },
-];
+  }, 
+] as any;
 
 const mockProducts = [
   {
     productId: 1,
-    name: "Bolo de chocolate",
-    preparation: "Pegue a massa e o recheio que foram produzidos",
-    salePrice: 50.00,
-    profitPercent: 20,
+    name: "Bolo de Cenoura",
+    preparation: "Misture a cenoura, ovo e farinha e leve ao forno.",
+    salePrice: 45.50,
+    profitPercent: 25,
     productIngredients: [
       {
+        id: 1,
         ingredientId: 1,
-        quantity: 2,
-        unit: 'unidade',
+        ingredientName: 'Leite condesado',
+        quantity: 3,
+        unit: 'kilo',
+        unitPriceSnapshot: 5,
       }
     ],
     productRecipes: [
       {
+        id: 1,
         recipeId: 1,
-        quantity: 2,
+        name: 'Brigadeiro Simples',
+        yieldQuantity: 20,
+        yieldUnit: 'unidades',
+        preparation:
+          'Coloque o leite condesado, a manteiga, e o chocolate. Misture até ferver',
+        additionalCostPercent: 5,
+        recipeIngredients: [
+          {
+            id: 1,
+            ingredientId: 1,
+            ingredientName: 'Leite Condensado',
+            quantity: 1,
+            unit: 'lata',
+            unitPriceSnapshot: 5,
+          },
+        ],
+        productServices: [
+          {
+            id: 1,
+            name: "Uber",
+            description: "Entrega",
+            providerName: "Marcelo",
+            unit: "Dinheiro",
+            unitPrice: 10,
+          }
+        ]
       }
     ],
     productServices: [
       {
-        serviceId: 1,
-        quantity: 2,
+        id: 1,
+        name: "Uber",
+        description: "Entrega",
+        providerName: "Marcelo",
+        unit: "Dinheiro",
+        unitPrice: 10,
       }
     ]
   },
@@ -82,21 +126,44 @@ const mockProducts = [
     profitPercent: 25,
     productIngredients: [
       {
-        ingredientId: 2,
-        quantity: 500,
-        unit: 'gramas',
+        id: 1,
+        ingredientId: 1,
+        ingredientName: 'Leite condesado',
+        quantity: 3,
+        unit: 'kilo',
+        unitPriceSnapshot: 5,
       }
     ],
     productRecipes: [
       {
-        recipeId: 2,
-        quantity: 1,
+        id: 1,
+        recipeId: 1,
+        name: 'Brigadeiro Simples',
+        yieldQuantity: 20,
+        yieldUnit: 'unidades',
+        preparation:
+          'Coloque o leite condesado, a manteiga, e o chocolate. Misture até ferver',
+        additionalCostPercent: 5,
+        recipeIngredients: [
+          {
+            id: 1,
+            ingredientId: 1,
+            ingredientName: 'Leite Condensado',
+            quantity: 1,
+            unit: 'lata',
+            unitPriceSnapshot: 5,
+          },
+        ],
       }
     ],
     productServices: [
       {
-        serviceId: 2,
-        quantity: 1,
+        id: 1,
+        name: "Uber",
+        description: "Entrega",
+        providerName: "Marcelo",
+        unit: "Dinheiro",
+        unitPrice: 10,
       }
     ]
   }
@@ -128,10 +195,13 @@ const HomePage = () => {
     } as any);
   };
 
-  const handleNavigateToDetailsProduct = (productId: number) => {
+  const handleNavigateToDetailsProduct = (product: ProductData) => {
+    const recipeDataString = JSON.stringify(product);
     router.push({
       pathname: "/DetailsProduct",
-      params: { id: productId },
+      params: {
+        recipeData: recipeDataString
+      },
     } as any);
   };
 

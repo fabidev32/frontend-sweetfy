@@ -1,42 +1,49 @@
 import { View, Text, StyleSheet } from 'react-native';
 import React from 'react';
 
+const safeParseFloat = (value: any): number => {
+    return parseFloat(value as any) || 0;
+};
+
 interface Ingredient {
     id: number;
     ingredientId: number;
     ingredientName: string;
     quantity: number;
     unit: string;
-    unitPriceSnapshot: number;
+    unitPriceSnapshot: number | string | undefined | null;
+    itemCost?: number;
 }
+
 
 interface IngredientsProps {
-
     data: Ingredient;
     onCostCalculated: (cost: number, id: number) => void;
-
 }
 
-const Ingredient = ({ data, onCostCalculated}: IngredientsProps) => {
+const Ingredient = ({ data, onCostCalculated }: IngredientsProps) => {
 
     const totalCost = () => {
-        return data.quantity * data.unitPriceSnapshot;
+        const price = safeParseFloat(data.unitPriceSnapshot);
+        const quantity = safeParseFloat(data.quantity);
+        return quantity * price;
     }
 
-    React.useEffect(() => {
-        onCostCalculated(totalCost(), data.id);
-    }, [totalCost(), onCostCalculated]); 
+    const cost = totalCost();
 
-        return (
+    React.useEffect(() => {
+        onCostCalculated(cost, data.id);
+    }, [cost, data.id, onCostCalculated]);
+
+    return (
         <View style={styles.container}>
             <Text style={styles.name}> {data.ingredientName} </Text>
             <Text style={styles.name}> {data.unitPriceSnapshot} </Text>
             <Text style={styles.name}> {data.quantity}</Text>
-            <Text style={styles.name}> {totalCost()} </Text>
+            <Text style={styles.name}> {cost} </Text>
         </View>
     );
 };
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -52,7 +59,7 @@ const styles = StyleSheet.create({
         color: '#880741',
         fontFamily: 'Montserrat',
         fontSize: 18,
-        margin: 3,        
+        margin: 3,
     },
 });
 

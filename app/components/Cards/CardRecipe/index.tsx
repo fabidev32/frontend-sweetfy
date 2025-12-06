@@ -14,7 +14,28 @@ interface RecipeData {
   preparation: string;
   additionalCostPercent: number;
   totalCost: number;
-  recipeIngredients: any[]; // Usando any[] por enquanto, se a interface for complexa.
+  quantity: number;
+  recipeIngredients: Ingredient[]; 
+  recipeServices: Service[];
+}
+
+interface Ingredient {
+  id: number;
+  ingredientId: number;
+  ingredientName: string;
+  quantity: number;
+  unit: string;
+  unitPriceSnapshot: number | string | undefined | null;
+  itemCost?: number;
+}
+
+interface Service {
+  id: number;
+  name: string;
+  description: string;
+  providerName: string;
+  unit: string;
+  unitPrice: number; 
 }
 
 interface CardRecipeProps {

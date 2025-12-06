@@ -7,6 +7,7 @@ import { Text, View, ScrollView, Image, TouchableOpacity } from 'react-native';
 import ListProducts from '@/components/ListOfCards/ListProducts';
 import Button from '../../../components/Buttons/index';
 import { useRouter } from 'expo-router';
+import { ProductData } from '@/components/Cards/CardProduct';
 
 
 export const mockProducts = [
@@ -72,10 +73,13 @@ const SeeMoreProducts = () => {
 
   const router = useRouter();
 
-  const handleNavigateToDetails = (productid: number) => {
+  const handleNavigateToDetailsProduct = (product: ProductData) => {
+    const productDataString = JSON.stringify(product);
     router.push({
-      pathname: "/DetailsProduct",
-      params: { id: productid },
+      pathname: "/DetailsRecipe",
+      params: {
+        productData: productDataString
+      },
     } as any);
   };
   const toggleItemSelection = (itemId: number) => {
@@ -220,7 +224,7 @@ const SeeMoreProducts = () => {
           </View>
 
           <ListProducts
-            onCardPress={handleNavigateToDetails}
+            onCardPress={handleNavigateToDetailsProduct}
             dataProduct={mockProducts}
             showSelectionControls={isSelectionModeActive}
             selectedItemIds={selectedItemIds}

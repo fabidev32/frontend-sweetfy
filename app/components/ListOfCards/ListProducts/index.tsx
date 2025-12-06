@@ -1,35 +1,22 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { ContainerList } from './style'
 import CardProduct from '../../Cards/CardProduct/index';
 import { ViewStyle, TouchableOpacity } from 'react-native';
+import { calculateProductTotalCost } from '../../../utils/costCalculator';
+import { calculateRecipeTotalCost } from '../../../utils/costCalculator';
 
-type NavigateFunction = (id: number) => void;
 
-export interface ProductIngredient {
-  ingredientId: number;
-  quantity: number;
-  unit: string;
-}
+type NavigateFunction = (product: ProductDataWithCost) => void;
 
-export interface ProductRecipe {
-  recipeId: number;
-  quantity: number;
-}
-
-export interface ProductService {
-  serviceId: number;
-  quantity: number;
-}
-
-export interface ProductData {
+interface ProductData {
   productId: number;
   name: string;
   preparation: string;
   salePrice: number;
   profitPercent: number;
-  productIngredients: ProductIngredient[]; 
-  productRecipes: ProductRecipe[];
-  productServices: ProductService[];
+  productIngredients: any[];
+  productRecipes: any[];
+  productServices: any[];
 }
 
 interface PropsListOfCards {
@@ -42,6 +29,11 @@ interface PropsListOfCards {
   onCardPress: NavigateFunction;
 }
 
+interface ProductDataWithCost extends ProductData {
+  totalCost: number;
+  totalProfit: number;
+}
+
 const ListProducts: React.FC<PropsListOfCards> = ({
   dataProduct,
   showSelectionControls = false,
@@ -51,15 +43,33 @@ const ListProducts: React.FC<PropsListOfCards> = ({
   cardItemStyle,
   onCardPress
 }) => {
+
+  const productWithCost: ProductDataWithCost[] = useMemo(() => {
+
+    return dataProduct.map(item => {
+      const totalCost = calculateProductTotalCost(item, calculateRecipeTotalCost);
+      const safeTotalCost = totalCost || 0;
+
+      const totalProfit = (item.salePrice || 0) - safeTotalCost;
+
+      return {
+        ...item,
+        totalCost: safeTotalCost,
+        totalProfit: totalProfit
+      };
+    });
+
+  }, [dataProduct]);
+
   return (
     <ContainerList style={style}>
-      {dataProduct.map((item) => (
-        <TouchableOpacity key={item.productId} onPress={() => onCardPress(item.productId)}>
+      {productWithCost.map((item) => (
+        <TouchableOpacity key={item.productId} onPress={() => onCardPress(item)}>
           <CardProduct
             id={item.productId}
-            data={item} 
-            checkBoxSelected={selectedItemIds.includes(item.productId)} 
-            showCheckBox={showSelectionControls} 
+            data={item}
+            checkBoxSelected={selectedItemIds.includes(item.productId)}
+            showCheckBox={showSelectionControls}
             functionButtonSelected={onItemSelect}
             cardStyle={cardItemStyle}
           />

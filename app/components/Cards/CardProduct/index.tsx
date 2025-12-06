@@ -30,6 +30,8 @@ export interface ProductData {
   productIngredients: ProductIngredient[]; 
   productRecipes: ProductRecipe[];
   productServices: ProductService[];
+  totalCost: number;
+  totalProfit: number;
 }
 
 
@@ -98,7 +100,7 @@ const CardProduct: React.FC<CardProductProps> = ({
               <View style = {{flexDirection: 'row', gap: 10}}>
               <Image style = {{width: 15, height: 15}}
               source={require('../../../../assets/icons/scrollDown.png')} />
-              <TextCost> RS$ 50, 00 </TextCost>
+              <TextCost> {data.totalCost} </TextCost>
               </View>
             </ViewPrice>
 
@@ -107,7 +109,7 @@ const CardProduct: React.FC<CardProductProps> = ({
               <View style = {{flexDirection: 'row', gap: 10}}>
               <Image style = {{width: 15, height: 15}}
               source={require('../../../../assets/icons/scrollUp.png')} />
-              <TextProfit> RS$ 100, 00 </TextProfit>
+              <TextProfit> {data.totalProfit} </TextProfit>
               </View>
             </ViewPrice>
           </ContainerPrice>

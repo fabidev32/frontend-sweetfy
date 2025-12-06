@@ -1,7 +1,55 @@
 import { View, Text, StyleSheet } from 'react-native';
 import React from 'react';
 
-type ItemsInput =  {
+interface OrderData {
+    id: number,
+    name: string,
+    description: string,
+    totalYield: number,
+    totalCost: number,
+    salePrice: number,
+    profit: number,
+    status: string,
+    orderProducts: Product[];
+    orderRecipes: Recipe[];
+}
+
+interface Product {
+
+productId: number;
+  name: string;
+  preparation: string;
+  salePrice: number;
+  profitPercent: number;
+  productIngredients: Ingredient[];
+  productRecipes: Recipe[];
+  productServices: Service[];
+
+}
+
+interface Recipe {
+
+    id: number,
+    recipeId: number,
+    recipeName: string,
+    quantity: number,
+    unitPriceSnapshot: number,
+    costSnapshot: number,
+    totalCost: number;
+    totalProfit: number;
+
+}
+
+interface Service {
+  id: number;
+  name: string;
+  description: string;
+  providerName: string;
+  unit: string;
+  unitPrice: number;
+}
+
+interface Ingredient {
   id: number;
   ingredientId: number;
   ingredientName: string;
@@ -11,8 +59,9 @@ type ItemsInput =  {
   itemCost?: number;
 }
 
+
 interface ItemsInputProps {
-  items: ItemsInput[];
+  items: Product[];
 }
 
 const ItemsInput = ({ items }: ItemsInputProps) => {
@@ -20,7 +69,7 @@ const ItemsInput = ({ items }: ItemsInputProps) => {
     <View style={styles.container}>
       {items.map((item, index) => (
         <View style={styles.viewIngredientes}>
-          <Text style={styles.name}> {item.ingredientName} </Text>
+          <Text style={styles.name}> {item.name}</Text>
         </View>
       ))}
     </View>

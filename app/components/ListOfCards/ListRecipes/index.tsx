@@ -2,26 +2,11 @@ import { ContainerList } from './style';
 import CardRecipe from '../../Cards/CardRecipe/index';
 import React, { useMemo } from 'react';
 import { ViewStyle, TouchableOpacity } from 'react-native';
+import { calculateRecipeTotalCost } from '@/utils/costCalculator';
+
 
 type NavigateFunction = (recipe: RecipeDataWithCost) => void;
 
-interface RecipeIngredient {
-    id: number;
-    ingredientId: number;
-    ingredientName: string;
-    quantity: number; 
-    unit: string;
-    unitPriceSnapshot: number | string | undefined | null; 
-    itemCost?: number; 
-}
-
-interface RecipeService {
-    id: number;
-    serviceId: number;
-    serviceName: string;
-    unitPriceSnapshot: number;
-    quantity: number;
-}
 
 interface RecipeData {
   id: number;
@@ -30,9 +15,29 @@ interface RecipeData {
   yieldQuantity: number;
   yieldUnit: string;
   preparation: string;
+  quantity: number;
   additionalCostPercent: number;
-  recipeIngredients: RecipeIngredient[]; 
-  recipeServices?: RecipeService[];
+  recipeIngredients: Ingredient[]; 
+  recipeServices: Service[];
+}
+
+interface Ingredient {
+  id: number;
+  ingredientId: number;
+  ingredientName: string;
+  quantity: number;
+  unit: string;
+  unitPriceSnapshot: number | string | undefined | null;
+  itemCost?: number;
+}
+
+interface Service {
+  id: number;
+  name: string;
+  description: string;
+  providerName: string;
+  unit: string;
+  unitPrice: number; 
 }
 
 
@@ -49,38 +54,10 @@ interface PropsListOfCards {
 
 interface RecipeDataWithCost extends RecipeData {
   totalCost: number;
-}
-
-const calculateTotalCost = (dataRecipe: RecipeData): number => {
-    
-    const costAllItensIngredients = dataRecipe.recipeIngredients.reduce(
-        (soma, item) => {
-            const price = parseFloat(item.unitPriceSnapshot as any) || 0;
-            const quantity = parseFloat(item.quantity as any) || 0;
-            
-            return soma + (price * quantity);
-        },
-        0
-    );
-
-    const costAllItensServices = (dataRecipe.recipeServices || []).reduce(
-        (soma, item) => {
-            const price = parseFloat(item.unitPriceSnapshot as any) || 0;
-            const quantity = parseFloat(item.quantity as any) || 0;
-            
-            return soma + (price * quantity);
-        },
-        0
-    );
-
-    const baseCostTotal = costAllItensIngredients + costAllItensServices;
-
-    const additionalFeeRate = dataRecipe.additionalCostPercent / 100;
-    const additionalCost = baseCostTotal * additionalFeeRate;
-    
-    return baseCostTotal + additionalCost;
+  quantity: number;
 
 }
+
 
 const ListRecipes: React.FC<PropsListOfCards> = ({
   dataRecipe,
@@ -92,12 +69,11 @@ const ListRecipes: React.FC<PropsListOfCards> = ({
   onCardPress
 }) => {
 
-  
+
   const recipesWithCost: RecipeDataWithCost[] = useMemo(() => {
 
     return dataRecipe.map(item => {
-
-      const totalCost = calculateTotalCost(item);
+      const totalCost = calculateRecipeTotalCost(item);
 
       return {
         ...item,
@@ -114,9 +90,9 @@ const ListRecipes: React.FC<PropsListOfCards> = ({
         <TouchableOpacity key={item.id} onPress={() => onCardPress(item)}>
           <CardRecipe
             id={item.id}
-            data={item} // Verifica se o ID do item está no array de selecionados
-            checkBoxSelected={selectedItemIds.includes(item.id)} // Recebe o controle de exibição de checkbox do componente pai
-            showCheckBox={showSelectionControls} // Função para lidar com a seleção, passada para o CardRecipe
+            data={item}
+            checkBoxSelected={selectedItemIds.includes(item.id)}
+            showCheckBox={showSelectionControls}
             functionButtonSelected={onItemSelect}
             cardStyle={cardItemStyle}
           />
