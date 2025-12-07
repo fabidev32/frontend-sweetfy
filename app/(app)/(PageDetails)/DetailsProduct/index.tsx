@@ -85,8 +85,6 @@ const PageDetailsProduct = () => {
   }
 
 
-
-
   React.useEffect(() => {
 
     if (!product) return;

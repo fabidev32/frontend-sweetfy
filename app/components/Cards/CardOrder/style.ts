@@ -1,7 +1,6 @@
 import styled from 'styled-components/native';
 
 export const ContainerCard = styled.View`
-  background-color: #ffffff;
   border-left-width: 6px;
   border-left-color: #880741;
   border-color: #880741;
@@ -11,11 +10,12 @@ export const ContainerCard = styled.View`
   padding: 6px;
   margin-left: 10px;
   min-height: 200px;
-  min-width: 300px;
+  width: 320px;
+  background-color: #FFFFFF;
+
 `;
 
 export const ViewCard = styled.View`
-  background-color: #FFFFFF;
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -55,7 +55,7 @@ export const TitleCard = styled.Text`
 `;
 
 export const TextCard = styled.Text`
-    color: #43A139;
+    color: #5F3124;
     font-family: 'Montserrat';
     font-size: 21px;
 `;
@@ -70,6 +70,6 @@ export const TextProfit = styled.Text`
 export const TextCost = styled.Text`
     color: #880741;
     font-family: 'Montserrat';
-    font-size: 20px;
+    font-size: 21px;
     font-weight: bold;
 `;

@@ -1,9 +1,82 @@
 import ListRecipes from '../../components/ListOfCards/ListRecipes/index';
 import ListProducts from '../../components/ListOfCards/ListProducts/index'
+import ListOrders from '../../components/ListOfCards/ListOrders/index'
 import { TouchableOpacity, ScrollView, View } from 'react-native';
 import { ContainerListOFCards, ViewButtonTitle, Title } from './style';
 import { useRouter } from 'expo-router';
 import { ProductData } from '@/components/Cards/CardProduct';
+import { OrderData } from '@/components/Cards/CardOrder';
+import { RecipeData } from '@/components/Cards/CardRecipe'
+
+
+const mockOrders = [
+    {
+    id: 1,
+    name: "Bolo de morango",
+    description: "Encomenda realizada pela Eliana, no bairro Taquaril",
+    totalYield: 5,
+    totalCost: 200,
+    salePrice: 100,
+    profit: 100,
+    status: "Em produção",
+    orderProducts: [
+      {
+        productId: 1,
+        name: "Bolo de Cenoura",
+        preparation: "Misture a cenoura, ovo e farinha e leve ao forno.",
+        salePrice: 45.50,
+        profitPercent: 25,
+        productIngredients: [
+          {
+            id: 1,
+            ingredientId: 1,
+            ingredientName: 'Leite condesado',
+            quantity: 3,
+            unit: 'kilo',
+            unitPriceSnapshot: 5, 
+            itemCost: 15,
+          }
+        ],
+        productRecipes: [
+          {
+            id: 1,
+            recipeId: 1,
+            recipeName: 'Brigadeiro Simples', 
+            quantity: 2, 
+            unitPriceSnapshot: 10.50, 
+            costSnapshot: 5.25, 
+            totalCost: 10.50, 
+            totalProfit: 10.50, 
+          }
+        ],
+        productServices: [
+          {
+            id: 1,
+            name: "Uber",
+            description: "Entrega",
+            providerName: "Marcelo",
+            unit: "Dinheiro",
+            unitPrice: 10,
+          }
+        ]
+      },
+    ],
+    orderRecipes: [
+      {
+        id: 1,
+        recipeId: 1,
+        recipeName: 'Brigadeiro Simples', 
+        quantity: 5, 
+        unitPriceSnapshot: 10.50, 
+        costSnapshot: 5.25, 
+        totalCost: 26.25, 
+        totalProfit: 26.25, 
+
+        
+      }
+    ]
+  }
+];
 
 const mockRecipes = [
   {
@@ -169,18 +242,6 @@ const mockProducts = [
   }
 ];
 
-interface RecipeData {
-  id: number;
-  recipeId: number;
-  name: string;
-  yieldQuantity: number;
-  yieldUnit: string;
-  preparation: string;
-  additionalCostPercent: number;
-  totalCost: number;
-  recipeIngredients: any[];
-}
-
 const HomePage = () => {
 
   const router = useRouter();
@@ -203,7 +264,19 @@ const HomePage = () => {
         recipeData: recipeDataString
       },
     } as any);
-  };
+
+  }
+
+    const handleNavigateToDetailsOrder = (order: OrderData) => {
+    const orderDataString = JSON.stringify(order);
+    router.push({
+      pathname: "/DetailsOrder",
+      params: {
+        orderData: orderDataString
+      },
+    } as any);
+
+  }
 
   return (
     <ScrollView>
@@ -243,7 +316,7 @@ const HomePage = () => {
             showsHorizontalScrollIndicator={false}>
             <ListProducts
               onCardPress={handleNavigateToDetailsProduct}
-              dataProduct={mockProducts}
+              dataProduct = {mockProducts}
               style={{
                 flexDirection: 'row',
                 margin: 10,
@@ -253,6 +326,31 @@ const HomePage = () => {
             </ListProducts>
           </ScrollView>
         </View>
+        
+          <View>
+          <ViewButtonTitle>
+            <Title> Encomendas</Title>
+            <TouchableOpacity
+              onPress={() => router.push('/SeeMoreOrders')}
+              style={{ margin: 10 }}> Ver mais </TouchableOpacity>
+          </ViewButtonTitle>
+
+          <ScrollView
+            horizontal={true}
+            showsHorizontalScrollIndicator={false}>
+            <ListOrders
+              onCardPress={handleNavigateToDetailsOrder}
+              data={mockOrders}
+              style={{
+                flexDirection: 'row',
+                margin: 10,
+              }}
+              cardItemStyle={{}}
+            >
+            </ListOrders>
+          </ScrollView>
+        </View>
+
 
       </ContainerListOFCards>
     </ScrollView>

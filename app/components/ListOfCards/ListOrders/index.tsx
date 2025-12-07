@@ -1,12 +1,10 @@
 import React, { useMemo } from 'react';
 import { ContainerList } from './style'
-import CardProduct from '../../Cards/CardProduct/index';
+import CardOrder from '../../Cards/CardOrder/index';
 import { ViewStyle, TouchableOpacity } from 'react-native';
-import { calculateProductTotalCost } from '../../../utils/costCalculator';
-import { calculateRecipeTotalCost } from '../../../utils/costCalculator';
 
 
-type NavigateFunction = (product: OrderDataWithCost) => void;
+type NavigateFunction = (product: OrderData) => void;
 
 interface OrderData {
     id: number,
@@ -77,10 +75,6 @@ interface PropsListOfCards {
   onCardPress: NavigateFunction;
 }
 
-interface OrderDataWithCost extends OrderData {
-  totalCost: number;
-  totalProfit: number;
-}
 
 const ListOrder: React.FC<PropsListOfCards> = ({
   data,
@@ -92,28 +86,12 @@ const ListOrder: React.FC<PropsListOfCards> = ({
   onCardPress
 }) => {
 
-  const productWithCost: OrderDataWithCost[] = useMemo(() => {
-
-    return data.map(item => {
-      const totalCost = calculateProductTotalCost(item.orderProducts, calculateRecipeTotalCost);
-      const safeTotalCost = totalCost || 0;
-
-      const totalProfit = (item.salePrice || 0) - safeTotalCost;
-
-      return {
-        ...item,
-        totalCost: safeTotalCost,
-        totalProfit: totalProfit
-      };
-    });
-
-  }, [data]);
 
   return (
     <ContainerList style={style}>
-      {productWithCost.map((item) => (
+      {data.map((item) => (
         <TouchableOpacity key={item.id} onPress={() => onCardPress(item)}>
-          <CardProduct
+          <CardOrder
             id={item.id}
             data={item}
             checkBoxSelected={selectedItemIds.includes(item.id)}

@@ -18,7 +18,7 @@ interface Ingredient {
 
 interface IngredientsProps {
     data: Ingredient;
-    onCostCalculated: (cost: number, id: number) => void;
+    onCostCalculated?: (cost: number, id: number) => void;
 }
 
 const Ingredient = ({ data, onCostCalculated }: IngredientsProps) => {
@@ -32,7 +32,7 @@ const Ingredient = ({ data, onCostCalculated }: IngredientsProps) => {
     const cost = totalCost();
 
     React.useEffect(() => {
-        onCostCalculated(cost, data.id);
+        onCostCalculated?.(cost, data.id);
     }, [cost, data.id, onCostCalculated]);
 
     return (

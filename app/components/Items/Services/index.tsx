@@ -18,7 +18,7 @@ interface ServiceData {
 
 interface ServiceProps {
     data: ServiceData;
-    onCostCalculated: (cost: number, id: number) => void;
+    onCostCalculated?: (cost: number, id: number) => void;
     quantity: number;
 }
 
@@ -32,7 +32,7 @@ const Service = ({ data, onCostCalculated, quantity}: ServiceProps) => {
     const cost = totalCost();
 
     React.useEffect(() => {
-        onCostCalculated(cost, data.id);
+        onCostCalculated?.(cost, data.id);
     }, [cost, data.id, onCostCalculated]);
 
 

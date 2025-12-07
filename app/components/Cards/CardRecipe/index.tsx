@@ -5,7 +5,7 @@ import FieldNameAndValue from '@/components/FieldNameAndValue';
 import ListIngredientesInput from '@/components/Cards/CardRecipe/ItemsCard';
 import { ViewStyle } from 'react-native';
 
-interface RecipeData {
+export interface RecipeData {
   id: number;
   recipeId: number;
   name: string;

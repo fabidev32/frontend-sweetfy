@@ -6,7 +6,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import ListProductsInput from './ItemsCard/index';
 
 
-interface OrderData {
+export interface OrderData {
     id: number,
     name: string,
     description: string,
@@ -130,8 +130,8 @@ const CardOrder: React.FC<CardOrderProps> = ({
                             <TextCost> {data.totalCost} </TextCost>
                         </ViewPrice>
                         <ViewPrice>
-                            <TextCost> Lucro total </TextCost>
-                            <TextCost> {data.profit} </TextCost>
+                            <TextProfit> Lucro total </TextProfit>
+                            <TextProfit> {data.profit} </TextProfit>
                         </ViewPrice>
 
                     </ContainerPrice>
