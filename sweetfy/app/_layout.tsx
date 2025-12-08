@@ -3,8 +3,8 @@
 import React, { useEffect } from 'react';
 import { PaperProvider, Portal } from 'react-native-paper';
 import { Stack, useRouter, useSegments } from 'expo-router';
-import { AuthProvider, useAuth } from '../app/context/AuthContext';
-import { primaryTheme } from '@/theme/theme';
+import { AuthProvider, useAuth } from '../context/AuthContext';
+import { primaryTheme } from '../theme/theme';
 import '../app/app.css';
 const RootLayoutNav = () => {
   const { session, isLoading } = useAuth();
@@ -19,7 +19,7 @@ const RootLayoutNav = () => {
     if (!session && !inAuthGroup) {
       router.replace('/login');
     } else if (session && inAuthGroup) {
-      router.replace('/');
+      router.replace('/home');
     }
   }, [session, isLoading, segments, router]);
 
