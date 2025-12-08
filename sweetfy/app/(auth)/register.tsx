@@ -1,16 +1,16 @@
 import DinamicButton from '@/components/Buttons';
 import DividerWithText from '@/components/DividerWithText';
 import InputItens from '@/components/Inputs';
-import { primaryTheme, theme } from '@/theme/theme';
+import { primaryTheme, theme } from '../../theme/theme';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { ActivityIndicator } from 'react-native-paper';
 import { fetchRegister } from '../../api/auth/auth';
-import { InputsContent } from '../components/Templates/auth/styles';
 import AuthTemplate from '@/components/Templates/auth';
 import DinamicSnackbar, {
   DinamicSnackbarType,
 } from '@/components/DinamicSnackbar';
+import { InputsContent } from '@/components/Templates/styles';
 
 const RegisterPageComponent = () => {
   const [fullName, setFullName] = useState('');
@@ -53,43 +53,43 @@ const RegisterPageComponent = () => {
       <InputsContent>
         <InputItens
           requiredField
-          inputStyle={{ height: 40 }}
           inputMode="text"
           theme={primaryTheme}
           placeholder="Nome"
           title="Insira seu nome"
-          setInputValue={setFullName}
+          keyboardType="default"
+          onChangeText={setFullName}
           value={fullName}
         />
         <InputItens
           requiredField
-          inputStyle={{ height: 40 }}
           inputMode="text"
           theme={primaryTheme}
           placeholder="Nome da Confeitaria"
           title="Insira o nome da confeitaria"
-          setInputValue={setBakeryName}
+          keyboardType="default"
+          onChangeText={setBakeryName}
           value={bakeryName}
         />
         <InputItens
           requiredField
-          inputStyle={{ height: 40 }}
           inputMode="email"
           theme={primaryTheme}
           placeholder="E-mail"
           title="Insira seu email"
-          setInputValue={setEmail}
+          keyboardType="email-address"
+          onChangeText={setEmail}
           value={email}
         />
         <InputItens
           requiredField
-          inputStyle={{ height: 40 }}
           inputMode="text"
           theme={primaryTheme}
           placeholder="Senha"
           title="Cadastre sua senha"
+          keyboardType="default"
           securityRequired
-          setInputValue={setPassword}
+          onChangeText={setPassword}
           value={password}
         />
       </InputsContent>

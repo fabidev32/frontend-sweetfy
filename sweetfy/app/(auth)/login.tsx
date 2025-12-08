@@ -1,17 +1,17 @@
 import DinamicButton from '@/components/Buttons';
 import DividerWithText from '@/components/DividerWithText';
 import InputItens from '@/components/Inputs';
-import { primaryTheme, theme } from '@/theme/theme';
+import { primaryTheme, theme } from '../../theme/theme';
 import { useState } from 'react';
 import { ActivityIndicator } from 'react-native-paper';
-import { useAuth } from '@/context/AuthContext';
+import { useAuth } from '../../context/AuthContext';
 import { router } from 'expo-router';
 import { fetchLogin } from '../../api/auth/auth';
 import AuthTemplate from '@/components/Templates/auth';
-import { InputsContent } from '@/components/Templates/auth/styles';
 import DinamicSnackbar, {
   DinamicSnackbarType,
 } from '@/components/DinamicSnackbar';
+import { InputsContent } from '@/components/Templates/styles';
 
 const LoginPageComponent = () => {
   const [email, setEmail] = useState('');
@@ -32,8 +32,8 @@ const LoginPageComponent = () => {
       const response = await fetchLogin({ email, password });
       setResponseStatusMessage('success');
       signIn(response.accessToken);
-    } catch (error: any) {
-      console.log(error);
+    } catch (e) {
+      console.error(e);
       setResponseStatusMessage('error');
     } finally {
       setShowResponseStatus(true);
@@ -45,22 +45,22 @@ const LoginPageComponent = () => {
     <AuthTemplate subtitle="Insira seus dados para que possamos começar!">
       <InputsContent>
         <InputItens
-          inputStyle={{ height: 40 }}
           inputMode="email"
           theme={primaryTheme}
           placeholder="Email"
+          keyboardType="email-address"
           title="Insira seu email"
-          setInputValue={setEmail}
+          onChangeText={setEmail}
           value={email}
         />
         <InputItens
-          inputStyle={{ height: 40 }}
           inputMode="text"
           theme={primaryTheme}
+          keyboardType="default"
           placeholder="Senha"
           title="Insira sua senha"
           securityRequired
-          setInputValue={setPassword}
+          onChangeText={setPassword}
           value={password}
         />
       </InputsContent>

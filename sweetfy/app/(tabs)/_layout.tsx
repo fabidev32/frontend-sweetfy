@@ -1,4 +1,4 @@
-import { CustomTabBar } from '@/components/PageTips/BottomNavigator';
+import { CustomTabBar } from '../../components/PageTips/BottomNavigator';
 import { Image } from 'react-native';
 
 import { Tabs } from 'expo-router';
@@ -26,9 +26,9 @@ export default function TabsLayout() {
         }}
       />
       <Tabs.Screen
-        name="index"
+        name="home"
         options={{
-          title: 'Início',
+          title: 'Home',
           tabBarIcon: ({ focused, size }) => (
             <Image
               source={require('../../assets/icons/home.png')}
@@ -55,6 +55,55 @@ export default function TabsLayout() {
               }}
             />
           ),
+        }}
+      />
+      <Tabs.Screen
+        name="createProductPage"
+        options={{
+          href: null,
+          headerShown: false,
+        }}
+      />
+      <Tabs.Screen
+        name="createIngredientPage"
+        options={{
+          href: null,
+          headerShown: false,
+        }}
+      />
+      <Tabs.Screen
+        name="createServicePage"
+        options={{
+          href: null,
+          headerShown: false,
+        }}
+      />
+      <Tabs.Screen
+        name="createRecipePage"
+        options={{
+          href: null,
+          headerShown: false,
+        }}
+      />
+      <Tabs.Screen
+        name="seeMoreProducts"
+        options={{
+          href: null,
+          headerShown: false,
+        }}
+      />
+      <Tabs.Screen
+        name="seeMoreRecipes"
+        options={{
+          href: null,
+          headerShown: false,
+        }}
+      />
+      <Tabs.Screen
+        name="seeMoreOrders"
+        options={{
+          href: null,
+          headerShown: false,
         }}
       />
     </Tabs>

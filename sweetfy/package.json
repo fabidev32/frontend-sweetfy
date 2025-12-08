@@ -9,7 +9,7 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "lint": "expo lint",
-    "tunnel": "ngrok http --domain=petrous-lilli-manfully.ngrok-free.dev http://localhost:5190 --host-header=rewrite",
+    "tunnel": "ngrok http --domain=petrous-lilli-manfully.ngrok-free.dev https://localhost:7286 --host-header=rewrite",
     "dev": "concurrently -n \"TUNNEL,APP\" -c \"green,magenta\" \"npm run tunnel\" \"npx expo start\""
   },
   "dependencies": {
@@ -34,6 +34,7 @@
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "react-native": "0.81.5",
+    "react-native-currency-input": "^1.1.1",
     "react-native-dropdown-picker": "^5.4.6",
     "react-native-gesture-handler": "~2.28.0",
     "react-native-paper": "^5.14.5",
