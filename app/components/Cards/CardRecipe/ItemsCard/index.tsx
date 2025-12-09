@@ -35,16 +35,17 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
   },
   viewIngredientes: {
-    width: 90,
+    width: 150,
     margin: 2,
     backgroundColor: '#F5F0F0',
     borderRadius: 18,
     textAlign: 'center',
+    padding: 5,
   },
   name: {
     color: '#880741',
     fontFamily: 'Montserrat',
-    fontSize: 11.5,
+    fontSize: 14,
     margin: 3,
   },
 });

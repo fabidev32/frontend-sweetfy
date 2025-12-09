@@ -74,6 +74,8 @@ const CardProduct: React.FC<CardProductProps> = ({
     );
   };
 
+    const formatCurrency = (value: string) => `R$ ${value.replace('.', ',')}`;
+
 
   return (
 
@@ -91,7 +93,7 @@ const CardProduct: React.FC<CardProductProps> = ({
           <View>
             <FieldNameAndValue
               name="Preço de venda:"
-              value={data.salePrice}
+              value={formatCurrency(data.salePrice.toString())}
             />
           </View>
           <ContainerPrice>
@@ -100,7 +102,7 @@ const CardProduct: React.FC<CardProductProps> = ({
               <View style = {{flexDirection: 'row', gap: 10}}>
               <Image style = {{width: 15, height: 15}}
               source={require('../../../../assets/icons/scrollDown.png')} />
-              <TextCost> {data.totalCost} </TextCost>
+              <TextCost> {formatCurrency(data.totalCost.toString())} </TextCost>
               </View>
             </ViewPrice>
 
@@ -109,7 +111,7 @@ const CardProduct: React.FC<CardProductProps> = ({
               <View style = {{flexDirection: 'row', gap: 10}}>
               <Image style = {{width: 15, height: 15}}
               source={require('../../../../assets/icons/scrollUp.png')} />
-              <TextProfit> {data.totalProfit} </TextProfit>
+              <TextProfit> {formatCurrency(data.totalProfit.toString())} </TextProfit>
               </View>
             </ViewPrice>
           </ContainerPrice>

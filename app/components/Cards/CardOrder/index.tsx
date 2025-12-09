@@ -21,14 +21,14 @@ export interface OrderData {
 
 interface Product {
 
-productId: number;
-  name: string;
-  preparation: string;
-  salePrice: number;
-  profitPercent: number;
-  productIngredients: Ingredient[];
-  productRecipes: Recipe[];
-  productServices: Service[];
+    productId: number;
+    name: string;
+    preparation: string;
+    salePrice: number;
+    profitPercent: number;
+    productIngredients: Ingredient[];
+    productRecipes: Recipe[];
+    productServices: Service[];
 
 }
 
@@ -46,22 +46,22 @@ interface Recipe {
 }
 
 interface Service {
-  id: number;
-  name: string;
-  description: string;
-  providerName: string;
-  unit: string;
-  unitPrice: number;
+    id: number;
+    name: string;
+    description: string;
+    providerName: string;
+    unit: string;
+    unitPrice: number;
 }
 
 interface Ingredient {
-  id: number;
-  ingredientId: number;
-  ingredientName: string;
-  quantity: number;
-  unit: string;
-  unitPriceSnapshot: number | string | undefined | null;
-  itemCost?: number;
+    id: number;
+    ingredientId: number;
+    ingredientName: string;
+    quantity: number;
+    unit: string;
+    unitPriceSnapshot: number | string | undefined | null;
+    itemCost?: number;
 }
 
 interface CardOrderProps {
@@ -105,6 +105,9 @@ const CardOrder: React.FC<CardOrderProps> = ({
         );
     };
 
+    const formatCurrency = (value: string) => `R$ ${value.replace('.', ',')}`;
+
+
 
     return (
 
@@ -122,16 +125,16 @@ const CardOrder: React.FC<CardOrderProps> = ({
 
                     <FieldNameAndValue
                         name="Preço de venda:"
-                        value={data.salePrice}
+                        value={formatCurrency(data.salePrice.toString())}
                     />
                     <ContainerPrice>
                         <ViewPrice>
                             <TextCost> Custo total </TextCost>
-                            <TextCost> {data.totalCost} </TextCost>
+                            <TextCost> {formatCurrency(data.totalCost.toString())} </TextCost>
                         </ViewPrice>
                         <ViewPrice>
                             <TextProfit> Lucro total </TextProfit>
-                            <TextProfit> {data.profit} </TextProfit>
+                            <TextProfit> {formatCurrency(data.profit.toString())} </TextProfit>
                         </ViewPrice>
 
                     </ContainerPrice>

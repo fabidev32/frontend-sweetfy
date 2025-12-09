@@ -20,10 +20,22 @@ const FieldNameAndValue: React.FC<FieldNameAndValueProps> = ({
   valueStyle,
   contentStyle,
 }) => {
+
+  const formatValue = (
+    value: ValueType | [ValueType] | [ValueType, ValueType]
+  ): string => {
+    if (Array.isArray(value)) {
+      return value.join(' ');
+    }
+
+    return String(value);
+  };
+
+
   return (
     <View style={[styles.viewDetails, contentStyle]}>
       <Text style={[styles.text, nameStyle]}>{name}</Text>
-      <Text style={[styles.textValue, valueStyle]}>{value} </Text>
+        <Text style={[styles.textValue, valueStyle]}> {formatValue(value)} </Text>
     </View>
   );
 };
@@ -44,8 +56,9 @@ const styles = StyleSheet.create({
     color: '#5F3124',
     fontFamily: 'Montserrat',
     fontSize: 21,
+  },
+  
 
-  }
 });
 
 export default FieldNameAndValue;
