@@ -1,12 +1,12 @@
-import * as React from 'react';
 import { View, ScrollView } from 'react-native';
+import { IRecipeData } from './type';
 
 import { useLocalSearchParams } from 'expo-router';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import FieldNameAndValue from '@/components/FieldNameAndValue';
 import { applyRecipeMargin } from '@/components/ListOfCards/utils';
 import Ingredients from '@/pagesContent/registerItems/ingredients';
-import Service from '@/components/Items/Services';
+import Service from '@/pagesContent/(PageDetails)/DetailsOrder/Items/Services';
 import {
   PageText,
   ViewContainer,
@@ -15,42 +15,6 @@ import {
   PageTitle,
 } from './style';
 
-interface RecipeIngredient {
-  id: number;
-  ingredientId: number;
-  ingredientName: string;
-  quantity: number;
-  unit: string;
-  unitPriceSnapshot: number | string | undefined | null;
-  itemCost?: number;
-}
-
-interface RecipeService {
-  id: number;
-  name: string;
-  description: string;
-  providerName: string;
-  unit: string;
-  unitPrice: number;
-  quantity: number;
-}
-
-interface RecipeData {
-  id: number;
-  recipeId: number;
-  name: string;
-  yieldQuantity: number;
-  yieldUnit: string;
-  quantity: number;
-  preparation: string;
-  additionalCostPercent: number;
-  recipeIngredients: RecipeIngredient[];
-  services: RecipeService[];
-}
-
-interface RecipeDataWithCost extends RecipeData {
-  totalCost: number;
-}
 
 const calculateItemCost = (
   price: number | string | undefined | null,
@@ -72,7 +36,7 @@ const PageDetailsRecipe = () => {
   const recipeDataJson = Array.isArray(recipeDataParam)
     ? recipeDataParam[0]
     : recipeDataParam;
-  const recipe: RecipeDataWithCost | null = recipeDataJson
+  const recipe: IRecipeData | null = recipeDataJson
     ? JSON.parse(recipeDataJson as string)
     : null;
 
@@ -93,9 +57,9 @@ const PageDetailsRecipe = () => {
       {} as Record<number, number>
     );
 
-    const initialServiceCosts = (recipe.services || []).reduce((acc, item) => {
+    const initialServiceCosts = (recipe.recipeServices || []).reduce((acc, item) => {
       quantityServices += 1;
-      const cost = (item.unitPrice || 0) * 1;
+      const cost = (item.unitPriceSnapshot || 0) * 1;
       acc[item.id] = cost;
       return acc;
     }, {} as Record<number, number>);
@@ -180,7 +144,7 @@ const PageDetailsRecipe = () => {
             </View>
 
             <View>
-              {recipe.services?.map((item) => (
+              {recipe.recipeServices.map((item) => (
                 <Service
                   key={item.id}
                   data={item}

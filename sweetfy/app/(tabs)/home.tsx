@@ -1,9 +1,8 @@
+import React, { useState, useEffect } from 'react';
 import { TouchableOpacity, ScrollView, View } from 'react-native';
 import { useRouter } from 'expo-router';
-import { OrderData } from '@/components/Cards/OrderCard';
-import { ProductData } from '@/components/Cards/ProductCard';
-import { RecipeData } from '@/components/Cards/RecipeCard';
-import React from 'react';
+import {fetchAllRecipes, fetchAllOrders, fetchAllProducts} from './../../api/homePage/getItem'
+import { IRecipeData, IOrdersData, IProductData } from '@/api/homePage/type';
 import { Title } from 'react-native-paper';
 import {
   ContainerListOFCards,
@@ -12,241 +11,18 @@ import {
 import ListOrders from '@/components/ListOfCards/ListOrders';
 import ListProducts from '@/components/ListOfCards/ListProducts';
 import ListRecipes from '@/components/ListOfCards/ListRecipes';
-
-const mockOrders = [
-  {
-    id: 1,
-    name: 'Bolo de morango',
-    description: 'Encomenda realizada pela Eliana, no bairro Taquaril',
-    totalYield: 5,
-    totalCost: 200,
-    salePrice: 100,
-    profit: 100,
-    status: 'Em produção',
-    orderProducts: [
-      {
-        productId: 1,
-        name: 'Bolo de Cenoura',
-        preparation: 'Misture a cenoura, ovo e farinha e leve ao forno.',
-        salePrice: 45.5,
-        profitPercent: 25,
-        productIngredients: [
-          {
-            id: 1,
-            ingredientId: 1,
-            ingredientName: 'Leite condesado',
-            quantity: 3,
-            unit: 'kilo',
-            unitPriceSnapshot: 5,
-            itemCost: 15,
-          },
-        ],
-        productRecipes: [
-          {
-            id: 1,
-            recipeId: 1,
-            recipeName: 'Brigadeiro Simples',
-            quantity: 2,
-            unitPriceSnapshot: 10.5,
-            costSnapshot: 5.25,
-            totalCost: 10.5,
-            totalProfit: 10.5,
-          },
-        ],
-        productServices: [
-          {
-            id: 1,
-            name: 'Uber',
-            description: 'Entrega',
-            providerName: 'Marcelo',
-            unit: 'Dinheiro',
-            unitPrice: 10,
-          },
-        ],
-      },
-    ],
-    orderRecipes: [
-      {
-        id: 1,
-        recipeId: 1,
-        recipeName: 'Brigadeiro Simples',
-        quantity: 5,
-        unitPriceSnapshot: 10.5,
-        costSnapshot: 5.25,
-        totalCost: 26.25,
-        totalProfit: 26.25,
-      },
-    ],
-  },
-];
-
-const mockRecipes = [
-  {
-    id: 1,
-    recipeId: 1,
-    name: 'Brigadeiro Simples',
-    yieldQuantity: 20,
-    yieldUnit: 'unidades',
-    preparation:
-      'Coloque o leite condesado, a manteiga, e o chocolate. Misture até ferver',
-    additionalCostPercent: 5,
-    recipeIngredients: [
-      {
-        id: 1,
-        ingredientId: 1,
-        ingredientName: 'Leite Condensado',
-        quantity: 1,
-        unit: 'lata',
-        unitPriceSnapshot: 5,
-      },
-    ],
-    productServices: [
-      {
-        id: 1,
-        name: 'Uber',
-        description: 'Entrega',
-        providerName: 'Marcelo',
-        unit: 'Dinheiro',
-        unitPrice: 10,
-      },
-    ],
-  },
-
-  {
-    id: 2,
-    recipeId: 2,
-    name: 'Brigadeiro Gourmet',
-    yieldQuantity: 15,
-    yieldUnit: 'unidades',
-    preparation: 'Utilize chocolate nobre e siga o processo de temperagem.',
-    additionalCostPercent: 10,
-    recipeIngredients: [
-      {
-        id: 2,
-        ingredientId: 2,
-        ingredientName: 'Chocolate Nobre',
-        quantity: 2,
-        unit: 'g',
-        unitPriceSnapshot: 15,
-      },
-    ],
-  },
-] as any;
-
-const mockProducts = [
-  {
-    productId: 1,
-    name: 'Bolo de Cenoura',
-    preparation: 'Misture a cenoura, ovo e farinha e leve ao forno.',
-    salePrice: 45.5,
-    profitPercent: 25,
-    productIngredients: [
-      {
-        id: 1,
-        ingredientId: 1,
-        ingredientName: 'Leite condesado',
-        quantity: 3,
-        unit: 'kilo',
-        unitPriceSnapshot: 5,
-      },
-    ],
-    productRecipes: [
-      {
-        id: 1,
-        recipeId: 1,
-        name: 'Brigadeiro Simples',
-        yieldQuantity: 20,
-        yieldUnit: 'unidades',
-        preparation:
-          'Coloque o leite condesado, a manteiga, e o chocolate. Misture até ferver',
-        additionalCostPercent: 5,
-        recipeIngredients: [
-          {
-            id: 1,
-            ingredientId: 1,
-            ingredientName: 'Leite Condensado',
-            quantity: 1,
-            unit: 'lata',
-            unitPriceSnapshot: 5,
-          },
-        ],
-        productServices: [
-          {
-            id: 1,
-            name: 'Uber',
-            description: 'Entrega',
-            providerName: 'Marcelo',
-            unit: 'Dinheiro',
-            unitPrice: 10,
-          },
-        ],
-      },
-    ],
-    productServices: [
-      {
-        id: 1,
-        name: 'Uber',
-        description: 'Entrega',
-        providerName: 'Marcelo',
-        unit: 'Dinheiro',
-        unitPrice: 10,
-      },
-    ],
-  },
-  {
-    productId: 2,
-    name: 'Bolo de Cenoura',
-    preparation: 'Misture a cenoura, ovo e farinha e leve ao forno.',
-    salePrice: 45.5,
-    profitPercent: 25,
-    productIngredients: [
-      {
-        id: 1,
-        ingredientId: 1,
-        ingredientName: 'Leite condesado',
-        quantity: 3,
-        unit: 'kilo',
-        unitPriceSnapshot: 5,
-      },
-    ],
-    productRecipes: [
-      {
-        id: 1,
-        recipeId: 1,
-        name: 'Brigadeiro Simples',
-        yieldQuantity: 20,
-        yieldUnit: 'unidades',
-        preparation:
-          'Coloque o leite condesado, a manteiga, e o chocolate. Misture até ferver',
-        additionalCostPercent: 5,
-        recipeIngredients: [
-          {
-            id: 1,
-            ingredientId: 1,
-            ingredientName: 'Leite Condensado',
-            quantity: 1,
-            unit: 'lata',
-            unitPriceSnapshot: 5,
-          },
-        ],
-      },
-    ],
-    productServices: [
-      {
-        id: 1,
-        name: 'Uber',
-        description: 'Entrega',
-        providerName: 'Marcelo',
-        unit: 'Dinheiro',
-        unitPrice: 10,
-      },
-    ],
-  },
-];
+ 
 
 const HomePage = () => {
+  
+  const [recipes, setRecipes] = useState<IRecipeData[]>([]);
+  const [products, setProducts]
+  = useState <IProductData[]>([]);
+  const [orders, setOrders] = useState <IOrdersData[]>([]);
+  
+  
   const router = useRouter();
-  const handleNavigateToDetailsRecipe = (recipe: RecipeData) => {
+  const handleNavigateToDetailsRecipe = (recipe: IRecipeData) => {
     const recipeDataString = JSON.stringify(recipe);
 
     router.push({
@@ -256,18 +32,31 @@ const HomePage = () => {
       },
     } as any);
   };
+  
+  useEffect(() => {
+  fetchAllRecipes(setRecipes);
+}, []); 
+  fetchAllRecipes(setRecipes)
 
-  const handleNavigateToDetailsProduct = (product: ProductData) => {
-    const recipeDataString = JSON.stringify(product);
+
+
+  const handleNavigateToDetailsProduct = (product: IProductData) => {
+    const productDataString = JSON.stringify(product);
     router.push({
       pathname: '/DetailsProduct',
       params: {
-        recipeData: recipeDataString,
+        productData: productDataString,
       },
     } as any);
   };
+  
+  useEffect(() => {
+  fetchAllProducts(setProducts);
+}, []);
+  fetchAllProducts(setProducts);
 
-  const handleNavigateToDetailsOrder = (order: OrderData) => {
+
+  const handleNavigateToDetailsOrder = (order: IOrdersData) => {
     const orderDataString = JSON.stringify(order);
     router.push({
       pathname: '/DetailsOrder',
@@ -276,6 +65,13 @@ const HomePage = () => {
       },
     } as any);
   };
+  
+  useEffect(() => {
+  fetchAllOrders(setOrders);
+}, []);
+fetchAllOrders(setOrders)
+
+
 
   return (
     <ScrollView>
@@ -297,7 +93,7 @@ const HomePage = () => {
           >
             <ListRecipes
               onCardPress={handleNavigateToDetailsRecipe}
-              dataRecipe={mockRecipes}
+              dataRecipe= {recipes}
               style={{
                 flexDirection: 'row',
                 margin: 10,
@@ -325,7 +121,7 @@ const HomePage = () => {
           >
             <ListProducts
               onCardPress={handleNavigateToDetailsProduct}
-              dataProduct={mockProducts}
+              dataProduct={products}
               style={{
                 flexDirection: 'row',
                 margin: 10,
@@ -353,7 +149,7 @@ const HomePage = () => {
           >
             <ListOrders
               onCardPress={handleNavigateToDetailsOrder}
-              data={mockOrders}
+              data={orders}
               style={{
                 flexDirection: 'row',
                 margin: 10,

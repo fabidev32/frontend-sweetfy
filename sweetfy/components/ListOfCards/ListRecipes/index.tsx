@@ -3,43 +3,13 @@ import { ContainerList } from './style';
 import React, { useMemo } from 'react';
 import { ViewStyle, TouchableOpacity } from 'react-native';
 import { calculateRecipeTotalCost } from '../utils';
+import {IRecipeData} from './type'
 
-type NavigateFunction = (recipe: RecipeDataWithCost) => void;
+type NavigateFunction = (recipe: IRecipeData) => void;
 
-interface RecipeData {
-  id: number;
-  recipeId: number;
-  name: string;
-  yieldQuantity: number;
-  yieldUnit: string;
-  preparation: string;
-  quantity: number;
-  additionalCostPercent: number;
-  recipeIngredients: Ingredient[];
-  recipeServices: Service[];
-}
-
-interface Ingredient {
-  id: number;
-  ingredientId: number;
-  ingredientName: string;
-  quantity: number;
-  unit: string;
-  unitPriceSnapshot: number | string | undefined | null;
-  itemCost?: number;
-}
-
-interface Service {
-  id: number;
-  name: string;
-  description: string;
-  providerName: string;
-  unit: string;
-  unitPrice: number;
-}
 
 interface PropsListOfCards {
-  dataRecipe: RecipeData[];
+  dataRecipe: IRecipeData[];
   showSelectionControls?: boolean;
   onItemSelect?: (itemId: number) => void;
   selectedItemIds?: number[];
@@ -48,7 +18,7 @@ interface PropsListOfCards {
   onCardPress: NavigateFunction;
 }
 
-interface RecipeDataWithCost extends RecipeData {
+interface RecipeDataWithCost extends IRecipeData {
   totalCost: number;
   quantity: number;
 }
@@ -62,7 +32,7 @@ const ListRecipes: React.FC<PropsListOfCards> = ({
   cardItemStyle,
   onCardPress,
 }) => {
-  const recipesWithCost: RecipeDataWithCost[] = useMemo(() => {
+  const recipesWithCost: IRecipeData[] = useMemo(() => {
     return dataRecipe.map((item) => {
       const totalCost = calculateRecipeTotalCost(item);
 

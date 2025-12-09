@@ -1,66 +1,14 @@
 import React, { useMemo } from 'react';
 import { ContainerList } from './style';
+import {IOrdersData} from './type'
 import { ViewStyle, TouchableOpacity } from 'react-native';
 import CardOrder from '@/components/Cards/OrderCard';
 
-type NavigateFunction = (product: OrderData) => void;
+type NavigateFunction = (product: IOrdersData) => void;
 
-interface OrderData {
-  id: number;
-  name: string;
-  description: string;
-  totalYield: number;
-  totalCost: number;
-  salePrice: number;
-  profit: number;
-  status: string;
-  orderProducts: Product[];
-  orderRecipes: Recipe[];
-}
-
-interface Product {
-  productId: number;
-  name: string;
-  preparation: string;
-  salePrice: number;
-  profitPercent: number;
-  productIngredients: Ingredient[];
-  productRecipes: Recipe[];
-  productServices: Service[];
-}
-
-interface Recipe {
-  id: number;
-  recipeId: number;
-  recipeName: string;
-  quantity: number;
-  unitPriceSnapshot: number;
-  costSnapshot: number;
-  totalCost: number;
-  totalProfit: number;
-}
-
-interface Service {
-  id: number;
-  name: string;
-  description: string;
-  providerName: string;
-  unit: string;
-  unitPrice: number;
-}
-
-interface Ingredient {
-  id: number;
-  ingredientId: number;
-  ingredientName: string;
-  quantity: number;
-  unit: string;
-  unitPriceSnapshot: number | string | undefined | null;
-  itemCost?: number;
-}
 
 interface PropsListOfCards {
-  data: OrderData[];
+  data: IOrdersData[];
   showSelectionControls?: boolean;
   onItemSelect?: (itemId: number) => void;
   selectedItemIds?: number[];

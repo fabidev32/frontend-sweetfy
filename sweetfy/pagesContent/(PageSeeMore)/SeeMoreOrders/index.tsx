@@ -1,86 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Text, View, ScrollView, Image, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
-import { OrderData } from '@/components/Cards/OrderCard';
-
+import { IOrdersData } from './type';
 import DinamicButton from '@/components/Buttons';
 import ListOrders from '@/components/ListOfCards/ListOrders';
+import {fetchAllOrders} from './../../../api/homePage/getItem'
 import { ContainerHomePage, ViewTitle } from './style';
 
-const mockOrders = [
-  {
-    id: 1,
-    name: 'Bolo de morango',
-    description: 'Encomenda realizada pela Eliana, no bairro Taquaril',
-    totalYield: 5,
-    totalCost: 200,
-    salePrice: 100,
-    profit: 100,
-    status: 'Em produção',
-    orderProducts: [
-      {
-        productId: 1,
-        name: 'Bolo de Cenoura',
-        preparation: 'Misture a cenoura, ovo e farinha e leve ao forno.',
-        salePrice: 45.5,
-        profitPercent: 25,
-        productIngredients: [
-          {
-            id: 1,
-            ingredientId: 1,
-            ingredientName: 'Leite condesado',
-            quantity: 3,
-            unit: 'kilo',
-            unitPriceSnapshot: 5,
-            itemCost: 15,
-          },
-        ],
-        productRecipes: [
-          {
-            id: 1,
-            recipeId: 1,
-            recipeName: 'Brigadeiro Simples',
-            quantity: 2,
-            unitPriceSnapshot: 10.5,
-            costSnapshot: 5.25,
-            totalCost: 10.5,
-            totalProfit: 10.5,
-          },
-        ],
-        productServices: [
-          {
-            id: 1,
-            name: 'Uber',
-            description: 'Entrega',
-            providerName: 'Marcelo',
-            unit: 'Dinheiro',
-            unitPrice: 10,
-          },
-        ],
-      },
-    ],
-    orderRecipes: [
-      {
-        id: 1,
-        recipeId: 1,
-        recipeName: 'Brigadeiro Simples',
-        quantity: 5,
-        unitPriceSnapshot: 10.5,
-        costSnapshot: 5.25,
-        totalCost: 26.25,
-        totalProfit: 26.25,
-      },
-    ],
-  },
-];
 
 const SeeMoreOrders = () => {
   const [isSelectionModeActive, setIsSelectionModeActive] = useState(false);
   const [selectedItemIds, setSelectedItemIds] = useState<number[]>([]);
+  const [orders, setOrders] = useState <IOrdersData[]>([]);
 
   const router = useRouter();
 
-  const handleNavigateToDetailsOrder = (order: OrderData) => {
+  const handleNavigateToDetailsOrder = (order: IOrdersData) => {
     const orderDataString = JSON.stringify(order);
     router.push({
       pathname: '/DetailsOrder',
@@ -105,8 +40,8 @@ const SeeMoreOrders = () => {
     setIsSelectionModeActive((prev) => !prev);
   };
   const handleSelectAllPress = () => {
-    const allIds = mockOrders.map((o) => o.id);
-    const currentlyAllSelected = selectedItemIds.length === mockOrders.length;
+    const allIds = orders.map((o) => o.id);
+    const currentlyAllSelected = selectedItemIds.length === orders.length;
 
     if (currentlyAllSelected) {
       setSelectedItemIds([]);
@@ -118,6 +53,12 @@ const SeeMoreOrders = () => {
       setIsSelectionModeActive(true);
     }
   };
+
+  useEffect(() => {
+  fetchAllOrders(setOrders);
+}, []); 
+  fetchAllOrders(setOrders)
+
 
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
@@ -144,7 +85,7 @@ const SeeMoreOrders = () => {
                 type="brownLight"
                 onPress={handleSelectAllPress}
                 buttonText={
-                  selectedItemIds.length === mockOrders.length
+                  selectedItemIds.length === orders.length
                     ? 'Remover'
                     : 'Todos'
                 }
@@ -229,7 +170,7 @@ const SeeMoreOrders = () => {
 
           <ListOrders
             onCardPress={handleNavigateToDetailsOrder}
-            data={mockOrders}
+            data={orders}
             showSelectionControls={isSelectionModeActive}
             selectedItemIds={selectedItemIds}
             onItemSelect={toggleItemSelection}

@@ -1,77 +1,32 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import {fetchAllProducts} from './../../../api/homePage/getItem'
 import { Text, View, ScrollView, Image, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
-import { ProductData } from '@/components/Cards/ProductCard';
-
+import { IProductData } from './type';
 import DinamicButton from '@/components/Buttons';
 import ListProducts from '@/components/ListOfCards/ListProducts';
 import { ContainerHomePage, ViewTitle } from './style';
 
-export const mockProducts = [
-  {
-    productId: 1,
-    name: 'Bolo de chocolate',
-    preparation: 'Pegue a massa e o recheio que foram produzidos',
-    salePrice: 50.0,
-    profitPercent: 20,
-    productIngredients: [
-      {
-        ingredientId: 1,
-        quantity: 2,
-        unit: 'unidade',
-      },
-    ],
-    productRecipes: [
-      {
-        recipeId: 1,
-        quantity: 2,
-      },
-    ],
-    productServices: [
-      {
-        serviceId: 1,
-        quantity: 2,
-      },
-    ],
-  },
-  {
-    productId: 2,
-    name: 'Bolo de Cenoura',
-    preparation: 'Misture a cenoura, ovo e farinha e leve ao forno.',
-    salePrice: 45.5,
-    profitPercent: 25,
-    productIngredients: [
-      {
-        ingredientId: 2,
-        quantity: 500,
-        unit: 'gramas',
-      },
-    ],
-    productRecipes: [
-      {
-        recipeId: 2,
-        quantity: 1,
-      },
-    ],
-    productServices: [
-      {
-        serviceId: 2,
-        quantity: 1,
-      },
-    ],
-  },
-];
+
 
 const SeeMoreProducts = () => {
   const [isSelectionModeActive, setIsSelectionModeActive] = useState(false);
   const [selectedItemIds, setSelectedItemIds] = useState<number[]>([]);
+  const [products, setProducts]
+  = useState <IProductData[]>([]);
+
+  useEffect(() => {
+  fetchAllProducts(setProducts);
+}, []); 
+  fetchAllProducts(setProducts)
+
 
   const router = useRouter();
 
-  const handleNavigateToDetailsProduct = (product: ProductData) => {
+  const handleNavigateToDetailsProduct = (product: IProductData) => {
     const productDataString = JSON.stringify(product);
     router.push({
-      pathname: '/DetailsRecipe',
+      pathname: '/DetailsProduct',
       params: {
         productData: productDataString,
       },
@@ -93,8 +48,8 @@ const SeeMoreProducts = () => {
     setIsSelectionModeActive((prev) => !prev);
   };
   const handleSelectAllPress = () => {
-    const allIds = mockProducts.map((p) => p.productId);
-    const currentlyAllSelected = selectedItemIds.length === mockProducts.length;
+    const allIds = products.map((p) => p.id);
+    const currentlyAllSelected = selectedItemIds.length === products.length;
 
     if (currentlyAllSelected) {
       setSelectedItemIds([]);
@@ -132,7 +87,7 @@ const SeeMoreProducts = () => {
                 type="brownLight"
                 onPress={handleSelectAllPress}
                 buttonText={
-                  selectedItemIds.length === mockProducts.length
+                  selectedItemIds.length === products.length
                     ? 'Remover'
                     : 'Todos'
                 }
@@ -217,7 +172,7 @@ const SeeMoreProducts = () => {
 
           <ListProducts
             onCardPress={handleNavigateToDetailsProduct}
-            dataProduct={mockProducts}
+            dataProduct={products}
             showSelectionControls={isSelectionModeActive}
             selectedItemIds={selectedItemIds}
             onItemSelect={toggleItemSelection}

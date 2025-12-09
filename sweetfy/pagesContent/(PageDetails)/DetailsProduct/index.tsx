@@ -3,11 +3,11 @@ import { View, ScrollView } from 'react-native';
 
 import { useLocalSearchParams } from 'expo-router';
 import { useCallback, useMemo, useState } from 'react';
-import { calculateRecipeTotalCost } from '@/components/ListOfCards/utils';
 import FieldNameAndValue from '@/components/FieldNameAndValue';
-import Ingredients from '@/pagesContent/registerItems/ingredients';
-import Service from '@/components/Items/Services';
-import Recipe from '@/components/Items/Recipes';
+import Ingredients from './Items/Ingredients/index';
+import Recipes from './Items/Recipes/index'
+import Services from './Items/Services/index'
+
 import {
   PageText,
   ViewContainer,
@@ -15,56 +15,8 @@ import {
   ViewDescription,
   PageTitle,
 } from './style';
+import { IProductData } from './type';
 
-interface Service {
-  id: number;
-  name: string;
-  description: string;
-  providerName: string;
-  unit: string;
-  quantity: number;
-  unitPrice: number;
-}
-
-interface Ingredient {
-  id: number;
-  ingredientId: number;
-  ingredientName: string;
-  quantity: number;
-  unit: string;
-  unitPriceSnapshot: number | string | undefined | null;
-  itemCost?: number;
-}
-
-interface RecipeData {
-  id: number;
-  recipeId: number;
-  name: string;
-  yieldQuantity: number;
-  yieldUnit: string;
-  preparation: string;
-  quantity: number;
-  totalCost: number;
-  additionalCostPercent: number;
-  recipeIngredients: Ingredient[];
-  recipeServices?: Service[];
-}
-
-interface Product {
-  productId: number;
-  name: string;
-  preparation: string;
-  salePrice: number;
-  profitPercent: number;
-  productIngredients: Ingredient[];
-  productRecipes: RecipeData[];
-  productServices: Service[];
-}
-
-interface ProductDataWithCost extends Product {
-  totalCost: number;
-  totalProfit: number;
-}
 
 const calculateItemCost = (
   price: number | string | undefined | null,
@@ -87,7 +39,7 @@ const PageDetailsProduct = () => {
   const productDataJson = Array.isArray(productDataParam)
     ? productDataParam[0]
     : productDataParam;
-  const product: ProductDataWithCost | null = productDataJson
+  const product: IProductData | null = productDataJson
     ? JSON.parse(productDataJson as string)
     : null;
 
@@ -108,7 +60,7 @@ const PageDetailsProduct = () => {
 
     const initialServiceCosts = (product.productServices || []).reduce(
       (acc, item) => {
-        const cost = (item.unitPrice || 0) * (item.quantity || 1);
+        const cost = (item.unitPriceSnapshot|| 0) * (item.quantity || 1);
         acc[item.id] = cost;
         return acc;
       },
@@ -117,8 +69,10 @@ const PageDetailsProduct = () => {
 
     const initialRecipeCosts = (product.productRecipes || []).reduce(
       (acc, item) => {
-        const costPerUnit = calculateRecipeTotalCost(item);
-        acc[item.id] = costPerUnit * (item.quantity || 1);
+        const costPerUnit = parseFloat(item.unitPriceSnapshot as any) || 0;
+        const quantity = parseFloat(item.quantity as any) || 1;
+
+        acc[item.id] = costPerUnit * quantity;
         return acc;
       },
       {} as Record<number, number>
@@ -127,7 +81,7 @@ const PageDetailsProduct = () => {
     setIngredientCosts(initialIngredientCosts);
     setServiceCosts(initialServiceCosts);
     setRecipeCosts(initialRecipeCosts);
-  }, [product.productId]);
+  }, [product.id]);
 
   const updateIngredientCost = useCallback((itemId: number, cost: number) => {
     setIngredientCosts((prevCosts) => ({
@@ -198,7 +152,7 @@ const PageDetailsProduct = () => {
 
             <View>
               {product.productRecipes?.map((item) => (
-                <Recipe
+                <Recipes
                   key={item.id}
                   data={item}
                   quantity={item.quantity}
@@ -220,7 +174,7 @@ const PageDetailsProduct = () => {
 
             <View>
               {product.productServices?.map((item) => (
-                <Service
+                <Services
                   key={item.id}
                   data={item}
                   onCostCalculated={updateServiceCost}

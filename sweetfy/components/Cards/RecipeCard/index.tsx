@@ -1,50 +1,9 @@
 import * as React from 'react';
+import {IRecipeData} from './type'
 import { TouchableOpacity, View } from 'react-native';
 import { ViewStyle } from 'react-native';
-
-export interface RecipeData {
-  id: number;
-  recipeId: number;
-  name: string;
-  yieldQuantity: number;
-  yieldUnit: string;
-  preparation: string;
-  additionalCostPercent: number;
-  totalCost: number;
-  quantity: number;
-  recipeIngredients: Ingredient[];
-  recipeServices: Service[];
-}
-
-interface Ingredient {
-  id: number;
-  ingredientId: number;
-  ingredientName: string;
-  quantity: number;
-  unit: string;
-  unitPriceSnapshot: number | string | undefined | null;
-  itemCost?: number;
-}
-
-interface Service {
-  id: number;
-  name: string;
-  description: string;
-  providerName: string;
-  unit: string;
-  unitPrice: number;
-}
-
-interface CardRecipeProps {
-  data: RecipeData;
-  id: number;
-  showCheckBox: boolean;
-  checkBoxSelected: boolean;
-  functionButtonSelected?: (id: number) => void;
-  cardStyle?: ViewStyle;
-}
-
 import { Icon } from 'react-native-paper';
+import Items from './ItemsCard/index'
 import FieldNameAndValue from '../../FieldNameAndValue';
 import {
   ContainerWithCheckBox,
@@ -53,6 +12,16 @@ import {
   TitleCard,
   TextCard,
 } from './style';
+
+
+interface CardRecipeProps {
+  data: IRecipeData;
+  id: number;
+  showCheckBox: boolean;
+  checkBoxSelected: boolean;
+  functionButtonSelected?: (id: number) => void;
+  cardStyle?: ViewStyle;
+}
 
 const CardRecipe: React.FC<CardRecipeProps> = ({
   id,
@@ -101,7 +70,7 @@ const CardRecipe: React.FC<CardRecipeProps> = ({
             valueStyle={{ width: 150 }}
           />
           <TextCard numberOfLines={5}>{data.preparation}</TextCard>
-          <ListIngredientesInput items={data.recipeIngredients} />
+          <Items items={data.recipeIngredients} />
         </ViewCard>
       </ContainerCard>
     </ContainerWithCheckBox>

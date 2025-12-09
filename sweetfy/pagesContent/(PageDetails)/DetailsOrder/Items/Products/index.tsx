@@ -1,27 +1,17 @@
 import { View, Text, StyleSheet } from 'react-native';
+import {IOrdersProducts} from './../../type'
 import React from 'react';
 
-interface Recipe {
-  id: number;
-  recipeId: number;
-  name: string;
-  yieldQuantity: number;
-  yieldUnit: string;
-  preparation: string;
-  additionalCostPercent: number;
-  totalCost: number;
-  recipeIngredients: any[];
-}
 
-interface RecipeProps {
-  data: Recipe;
+interface ProductProps {
+  data: IOrdersProducts;
   quantity: number;
 }
 
-const Recipe = ({ data, quantity }: RecipeProps) => {
+const Product = ({ data, quantity }: ProductProps) => {
   return (
     <View style={styles.container}>
-      <Text style={styles.name}> {data.name} </Text>
+      <Text style={styles.name}> {data.productName} </Text>
       <Text style={styles.name}> {quantity} </Text>
     </View>
   );
@@ -44,4 +34,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Recipe;
+export default Product;

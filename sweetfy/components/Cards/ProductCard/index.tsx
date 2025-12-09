@@ -1,6 +1,7 @@
 import { View, Image, ViewStyle, TouchableOpacity } from 'react-native';
 import ListIngredientesInput from './ItemsCard/index';
 import { Icon } from 'react-native-paper';
+import {IProductData} from './type'
 import FieldNameAndValue from '../../FieldNameAndValue';
 import {
   ContainerWithCheckBox,
@@ -13,38 +14,10 @@ import {
   TextProfit,
 } from './style';
 
-export interface ProductIngredient {
-  ingredientId: number;
-  quantity: number;
-  unit: string;
-}
-
-export interface ProductRecipe {
-  recipeId: number;
-  quantity: number;
-}
-
-export interface ProductService {
-  serviceId: number;
-  quantity: number;
-}
-
-export interface ProductData {
-  productId: number;
-  name: string;
-  preparation: string;
-  salePrice: number;
-  profitPercent: number;
-  productIngredients: ProductIngredient[];
-  productRecipes: ProductRecipe[];
-  productServices: ProductService[];
-  totalCost: number;
-  totalProfit: number;
-}
 
 interface CardProductProps {
   id: number;
-  data: ProductData;
+  data: IProductData;
   showCheckBox: boolean;
   checkBoxSelected: boolean;
   functionButtonSelected?: (id: number) => void;
@@ -112,7 +85,7 @@ const CardProduct: React.FC<CardProductProps> = ({
                   style={{ width: 15, height: 15 }}
                   source={require('../../../assets/icons/scrollUp.png')}
                 />
-                <TextProfit> {data.totalProfit} </TextProfit>
+                <TextProfit> {data.profitAmount} </TextProfit>
               </View>
             </ViewPrice>
           </ContainerPrice>

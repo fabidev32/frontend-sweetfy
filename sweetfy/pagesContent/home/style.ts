@@ -6,14 +6,12 @@ export const ContainerListOFCards = styled.View`
   background-color: #f3e9e7ff;
 `;
 
-// Componente para o título, aceita as propriedades de fonte
 export const TitleText = styled.Text`
   font-size: 30px;
   font-weight: bold;
   color: #5f3124;
 `;
 
-// Contêiner para o layout do título e botão
 export const ViewButtonTitle = styled.View`
   display: flex;
   flex-direction: row;

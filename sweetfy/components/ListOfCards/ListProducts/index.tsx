@@ -1,24 +1,14 @@
 import React, { useMemo } from 'react';
 import { ContainerList } from './style';
+import {IProductData} from './type'
 import { ViewStyle, TouchableOpacity } from 'react-native';
 import CardProduct from '@/components/Cards/ProductCard';
 import { calculateProductTotalCost, calculateRecipeTotalCost } from '../utils';
 
-type NavigateFunction = (product: ProductDataWithCost) => void;
-
-interface ProductData {
-  productId: number;
-  name: string;
-  preparation: string;
-  salePrice: number;
-  profitPercent: number;
-  productIngredients: any[];
-  productRecipes: any[];
-  productServices: any[];
-}
+type NavigateFunction = (product: IProductData) => void;
 
 interface PropsListOfCards {
-  dataProduct: ProductData[];
+  dataProduct: IProductData[];
   showSelectionControls?: boolean;
   onItemSelect?: (itemId: number) => void;
   selectedItemIds?: number[];
@@ -27,10 +17,6 @@ interface PropsListOfCards {
   onCardPress: NavigateFunction;
 }
 
-interface ProductDataWithCost extends ProductData {
-  totalCost: number;
-  totalProfit: number;
-}
 
 const ListProducts: React.FC<PropsListOfCards> = ({
   dataProduct,
@@ -41,7 +27,7 @@ const ListProducts: React.FC<PropsListOfCards> = ({
   cardItemStyle,
   onCardPress,
 }) => {
-  const productWithCost: ProductDataWithCost[] = useMemo(() => {
+  const productWithCost: IProductData[] = useMemo(() => {
     return dataProduct.map((item) => {
       const totalCost = calculateProductTotalCost(
         item,
@@ -63,13 +49,13 @@ const ListProducts: React.FC<PropsListOfCards> = ({
     <ContainerList style={style}>
       {productWithCost.map((item) => (
         <TouchableOpacity
-          key={item.productId}
+          key={item.id}
           onPress={() => onCardPress(item)}
         >
           <CardProduct
-            id={item.productId}
+            id={item.id}
             data={item}
-            checkBoxSelected={selectedItemIds.includes(item.productId)}
+            checkBoxSelected={selectedItemIds.includes(item.id)}
             showCheckBox={showSelectionControls}
             functionButtonSelected={onItemSelect}
             cardStyle={cardItemStyle}

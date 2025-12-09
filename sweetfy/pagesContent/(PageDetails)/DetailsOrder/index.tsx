@@ -1,12 +1,10 @@
 import * as React from 'react';
 import { View, ScrollView } from 'react-native';
-
 import { useLocalSearchParams } from 'expo-router';
 import FieldNameAndValue from '@/components/FieldNameAndValue';
-import Ingredients from '@/pagesContent/registerItems/ingredients';
-import Product from '@/components/Items/Products';
-import Recipe from '@/components/Items/Recipes';
-import Service from '@/components/Items/Services';
+import Product from '@/pagesContent/(PageDetails)/DetailsOrder/Items/Products';
+import Recipe from '@/pagesContent/(PageDetails)/DetailsOrder/Items/Recipes';
+
 import {
   PageText,
   PageTitle,
@@ -14,69 +12,9 @@ import {
   ViewDescription,
   ViewProduct,
 } from './style';
+import {IOrdersData} from './type'
 
-interface OrderData {
-  id: number;
-  name: string;
-  description: string;
-  totalYield: number;
-  totalCost: number;
-  salePrice: number;
-  profit: number;
-  status: string;
-  orderProducts: Product[];
-  orderRecipes: RecipeData[];
-  orderServices: Service[];
-  orderIngredient: Ingredient[];
-}
 
-interface Product {
-  productId: number;
-  name: string;
-  preparation: string;
-  salePrice: number;
-  profitPercent: number;
-  productIngredients: Ingredient[];
-  productRecipes: Recipe[];
-  productServices: Service[];
-  totalCost: number;
-  totalProfit: number;
-  quantity: number;
-}
-
-interface RecipeData {
-  id: number;
-  recipeId: number;
-  name: string;
-  yieldQuantity: number;
-  yieldUnit: string;
-  preparation: string;
-  quantity: number;
-  totalCost: number;
-  additionalCostPercent: number;
-  recipeIngredients: Ingredient[];
-  recipeServices?: Service[];
-}
-
-interface Service {
-  id: number;
-  name: string;
-  description: string;
-  providerName: string;
-  unit: string;
-  unitPrice: number;
-  quantity: number;
-}
-
-interface Ingredient {
-  id: number;
-  ingredientId: number;
-  ingredientName: string;
-  quantity: number;
-  unit: string;
-  unitPriceSnapshot: number | string | undefined | null;
-  itemCost?: number;
-}
 
 const PageDetailsOrders = () => {
   const params = useLocalSearchParams();
@@ -84,7 +22,7 @@ const PageDetailsOrders = () => {
   const orderDataJson = Array.isArray(orderDataParam)
     ? orderDataParam[0]
     : orderDataParam;
-  const order: OrderData | null = orderDataJson
+  const order: IOrdersData | null = orderDataJson
     ? JSON.parse(orderDataJson as string)
     : null;
 
@@ -121,7 +59,7 @@ const PageDetailsOrders = () => {
             <PageTitle> Receitas </PageTitle>
 
             <View>
-              {order.orderRecipes?.map((item) => (
+              {order.ordersRecipes?.map((item) => (
                 <Recipe
                   key={item.id}
                   data={item}
@@ -143,25 +81,6 @@ const PageDetailsOrders = () => {
             </View>
 
             <PageTitle> Gastos totais </PageTitle>
-
-            <View>
-              {order.orderIngredient?.map((item) => (
-                <Ingredients
-                  key={item.id}
-                  data={item}
-                />
-              ))}
-            </View>
-
-            <View>
-              {order.orderServices?.map((item) => (
-                <Service
-                  key={item.id}
-                  data={item}
-                  quantity={item.quantity}
-                />
-              ))}
-            </View>
           </ViewDescription>
         </ViewProduct>
       </ViewContainer>

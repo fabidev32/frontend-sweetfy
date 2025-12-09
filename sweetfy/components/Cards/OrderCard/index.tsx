@@ -12,64 +12,14 @@ import {
   ViewCard,
   ViewPrice,
 } from './style';
+import {IOrdersData} from './type'
+import ListProductsInput from './ItemsCard/index';
 import FieldNameAndValue from '../../FieldNameAndValue';
 
-export interface OrderData {
-  id: number;
-  name: string;
-  description: string;
-  totalYield: number;
-  totalCost: number;
-  salePrice: number;
-  profit: number;
-  status: string;
-  orderProducts: Product[];
-  orderRecipes: Recipe[];
-}
 
-interface Product {
-  productId: number;
-  name: string;
-  preparation: string;
-  salePrice: number;
-  profitPercent: number;
-  productIngredients: Ingredient[];
-  productRecipes: Recipe[];
-  productServices: Service[];
-}
-
-interface Recipe {
-  id: number;
-  recipeId: number;
-  recipeName: string;
-  quantity: number;
-  unitPriceSnapshot: number;
-  costSnapshot: number;
-  totalCost: number;
-  totalProfit: number;
-}
-
-interface Service {
-  id: number;
-  name: string;
-  description: string;
-  providerName: string;
-  unit: string;
-  unitPrice: number;
-}
-
-interface Ingredient {
-  id: number;
-  ingredientId: number;
-  ingredientName: string;
-  quantity: number;
-  unit: string;
-  unitPriceSnapshot: number | string | undefined | null;
-  itemCost?: number;
-}
 
 interface CardOrderProps {
-  data: OrderData;
+  data: IOrdersData;
   id: number;
   showCheckBox: boolean;
   checkBoxSelected: boolean;

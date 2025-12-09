@@ -127,3 +127,5 @@ export interface IProduct{
     productServices:includedServiceDetails[]
 }
 
+// Home page
+
