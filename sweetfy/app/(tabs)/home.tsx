@@ -1,28 +1,31 @@
 import React, { useState, useEffect } from 'react';
-import { TouchableOpacity, ScrollView, View } from 'react-native';
+import { TouchableOpacity, ScrollView, View, Text } from 'react-native';
 import { useRouter } from 'expo-router';
-import {fetchAllRecipes, fetchAllOrders, fetchAllProducts} from './../../api/homePage/getItem'
-import { IRecipeData, IOrdersData, IProductData, IIngredientsData} from '@/api/homePage/type';
+import { fetchAllRecipes, fetchAllOrders, fetchAllProducts, fetchAllIngredients, fetchAllServices } from './../../api/homePage/getItem'
+import { IRecipeData, IOrdersData, IProductData, IIngredientData, IServiceData } from '@/api/homePage/type';
 import { Title } from 'react-native-paper';
 import {
   ContainerListOFCards,
   ViewButtonTitle,
+  TextSeeMore
+
 } from '@/pagesContent/home/style';
 import ListOrders from '@/components/ListOfCards/ListOrders';
 import ListProducts from '@/components/ListOfCards/ListProducts';
 import ListRecipes from '@/components/ListOfCards/ListRecipes';
-import ListIngredients from '@/components/ListOfCards/ListIngredients';
- 
+import ListIngredientsHomePage from '@/components/ListOfCards/ListingredientsHomePage/index'
+import ListServicesHomePage from '@/components/ListOfCards/ListServicesHomePage/index'
 
 const HomePage = () => {
-  
+
   const [recipes, setRecipes] = useState<IRecipeData[]>([]);
   const [products, setProducts]
-  = useState <IProductData[]>([]);
-  const [orders, setOrders] = useState <IOrdersData[]>([]);
-    const [ingredients, setIngredients] = useState<IIngredientsData[]>([]);
+    = useState<IProductData[]>([]);
+  const [orders, setOrders] = useState<IOrdersData[]>([]);
+  const [ingredients, setIngredients] = useState<IIngredientData[]>([]);
+  const [services, setServices] = useState<IServiceData[]>([]);
 
-  
+
   const router = useRouter();
   const handleNavigateToDetailsRecipe = (recipe: IRecipeData) => {
     const recipeDataString = JSON.stringify(recipe);
@@ -34,7 +37,7 @@ const HomePage = () => {
       },
     } as any);
   };
-  
+
   useEffect(() => {
     fetchAllRecipes(setRecipes);
   }, []);
@@ -49,10 +52,10 @@ const HomePage = () => {
       },
     } as any);
   };
-  
+
   useEffect(() => {
-  fetchAllProducts(setProducts);
-}, []);
+    fetchAllProducts(setProducts);
+  }, []);
 
 
   const handleNavigateToDetailsOrder = (order: IOrdersData) => {
@@ -64,12 +67,12 @@ const HomePage = () => {
       },
     } as any);
   };
-  
-  useEffect(() => {
-  fetchAllOrders(setOrders);
-}, []);
 
-const handleNavigateToDetailsIngredients = (ingredient: IIngredientsData) => {
+  useEffect(() => {
+    fetchAllOrders(setOrders);
+  }, []);
+
+  const handleNavigateToDetailsIngredients = (ingredient: IIngredientData) => {
     const ingredientDataString = JSON.stringify(ingredient);
     router.push({
       pathname: '/DetailsIngredients',
@@ -78,10 +81,15 @@ const handleNavigateToDetailsIngredients = (ingredient: IIngredientsData) => {
       },
     } as any);
   };
-  
+
   useEffect(() => {
-  fetchAllOrders(setIngredients);
-}, []);
+    fetchAllIngredients(setIngredients);
+  }, []);
+
+
+  useEffect(() => {
+    fetchAllServices(setServices);
+  }, []);
 
 
 
@@ -95,7 +103,7 @@ const handleNavigateToDetailsIngredients = (ingredient: IIngredientsData) => {
               onPress={() => router.push('/seeMoreRecipes')}
               style={{ margin: 10 }}
             >
-              Ver mais
+              <TextSeeMore> Ver mais</TextSeeMore>
             </TouchableOpacity>
           </ViewButtonTitle>
           <ScrollView
@@ -104,7 +112,7 @@ const handleNavigateToDetailsIngredients = (ingredient: IIngredientsData) => {
           >
             <ListRecipes
               onCardPress={handleNavigateToDetailsRecipe}
-              dataRecipe= {recipes}
+              dataRecipe={recipes}
               style={{
                 flexDirection: 'row',
                 margin: 10,
@@ -121,7 +129,7 @@ const handleNavigateToDetailsIngredients = (ingredient: IIngredientsData) => {
               onPress={() => router.push('/(tabs)/seeMoreProducts')}
               style={{ margin: 10 }}
             >
-              Ver mais
+              <TextSeeMore> Ver mais</TextSeeMore>
             </TouchableOpacity>
           </ViewButtonTitle>
 
@@ -148,7 +156,7 @@ const handleNavigateToDetailsIngredients = (ingredient: IIngredientsData) => {
               onPress={() => router.push('/seeMoreOrders')}
               style={{ margin: 10 }}
             >
-              Ver mais
+              <TextSeeMore> Ver mais</TextSeeMore>
             </TouchableOpacity>
           </ViewButtonTitle>
 
@@ -175,7 +183,7 @@ const handleNavigateToDetailsIngredients = (ingredient: IIngredientsData) => {
               onPress={() => router.push('/seeMoreIngredients')}
               style={{ margin: 10 }}
             >
-              Ver mais
+              <TextSeeMore> Ver mais</TextSeeMore>
             </TouchableOpacity>
           </ViewButtonTitle>
 
@@ -183,19 +191,45 @@ const handleNavigateToDetailsIngredients = (ingredient: IIngredientsData) => {
             horizontal={true}
             showsHorizontalScrollIndicator={false}
           >
-            <ListIngredients
-              onCardPress={handleNavigateToDetailsIngredients}
+            <ListIngredientsHomePage
               data={ingredients}
               style={{
                 flexDirection: 'row',
                 margin: 10,
               }}
               cardItemStyle={{}}
-            ></ListIngredients>
+            ></ListIngredientsHomePage>
+          </ScrollView>
+        </View>
+
+        <View>
+          <ViewButtonTitle>
+            <Title> Serviços </Title>
+            <TouchableOpacity
+              onPress={() => router.push('/seeMoreServices')}
+              style={{ margin: 10 }}
+            >
+              <TextSeeMore> Ver mais</TextSeeMore>
+            </TouchableOpacity>
+          </ViewButtonTitle>
+
+          <ScrollView
+            horizontal={true}
+            showsHorizontalScrollIndicator={false}
+          >
+            <ListServicesHomePage
+              data={services}
+              style={{
+                flexDirection: 'row',
+                margin: 10,
+              }}
+              cardItemStyle={{}}
+            ></ListServicesHomePage>
           </ScrollView>
         </View>
       </ContainerListOFCards>
     </ScrollView>
+    
   );
 };
 

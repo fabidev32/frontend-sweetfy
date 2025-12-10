@@ -7,9 +7,7 @@ import {
   TextCard,
   ViewCard,
 } from './style';
-import {IIngredientData} from './type'
-
-
+import { IIngredientData } from './type';
 
 interface CardIngredientProps {
   data: IIngredientData;
@@ -20,7 +18,7 @@ interface CardIngredientProps {
   cardStyle?: ViewStyle;
 }
 
-const CardOrder: React.FC<CardIngredientProps> = ({
+const CardIngredient: React.FC<CardIngredientProps> = ({
   id,
   showCheckBox,
   checkBoxSelected,
@@ -48,20 +46,37 @@ const CardOrder: React.FC<CardIngredientProps> = ({
     );
   };
 
+  const formatCurrency = (value: number) =>
+    new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
+
+
   return (
-    <ContainerWithCheckBox>
+    <ContainerWithCheckBox style={cardStyle}>
       {ControllerCheckBox()}
       <ContainerCard>
         <ViewCard>
-          <View>
-            <TextCard> {data.brand} </TextCard>
+          <TextCard style={{ fontWeight: 'bold', fontSize: 16 }}>
+            {data.name}
+          </TextCard>
+
+          <TextCard>
+            {data.brand}
+          </TextCard>
+
+          <View style={{ flex: 1, flexDirection: 'row'}}>
+            <TextCard>
+              {data.quantity}
+            </TextCard>
+            <TextCard> {data.unit} </TextCard>
           </View>
-              <TextCard> {data.unit} </TextCard>
-              <TextCard> {data.unitPrice} </TextCard>
+
+          <TextCard>
+            {formatCurrency(data.unitPrice)}
+          </TextCard>
         </ViewCard>
       </ContainerCard>
     </ContainerWithCheckBox>
   );
 };
 
-export default CardOrder;
+export default CardIngredient;

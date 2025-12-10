@@ -1,3 +1,19 @@
+//Ingredients 
+
+export interface IIngredientData {
+  id: number;
+  name: string,
+  description: string,
+  brand: string,
+  quantity: number,
+  unit: string,
+  unitPrice: number
+}
+
+
+//Receitas 
+
+
 export interface IRecipeData {
   id: number,
   name: string,
@@ -102,6 +118,16 @@ export interface IOrdersRecipes {
       costSnapshot: number
 }
 
+export interface IServiceData {
+
+    id: number,
+    name: string,
+    description: string,
+    providerName: string,
+    unit: string,
+    unitPrice: number,
+}
+
 // Id
 
 
@@ -116,4 +142,14 @@ export interface ProductId {
 export interface OrderId {
     id: number;
 }
+
+export interface IngredientId {
+    id: number;
+}
+
+export interface ServiceId {
+    id: number;
+}
+
+
 

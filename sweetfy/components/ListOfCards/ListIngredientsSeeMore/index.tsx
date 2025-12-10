@@ -1,10 +1,8 @@
-import React, { useMemo } from 'react';
 import { ContainerList } from './style';
 import {IIngredientData} from './type'
-import { ViewStyle, TouchableOpacity } from 'react-native';
+import { ViewStyle} from 'react-native';
 import CardIngredient from '@/components/Cards/IngredientCard';
 
-type NavigateFunction = (product: IIngredientData) => void;
 
 
 interface PropsListOfCards {
@@ -14,7 +12,6 @@ interface PropsListOfCards {
   selectedItemIds?: number[];
   style?: ViewStyle;
   cardItemStyle?: ViewStyle;
-  onCardPress: NavigateFunction;
 }
 
 const ListIngredients: React.FC<PropsListOfCards> = ({
@@ -24,15 +21,10 @@ const ListIngredients: React.FC<PropsListOfCards> = ({
   selectedItemIds = [],
   style,
   cardItemStyle,
-  onCardPress,
 }) => {
   return (
     <ContainerList style={style}>
       {data.map((item) => (
-        <TouchableOpacity
-          key={item.id}
-          onPress={() => onCardPress(item)}
-        >
           <CardIngredient
             id={item.id}
             data={item}
@@ -41,7 +33,6 @@ const ListIngredients: React.FC<PropsListOfCards> = ({
             functionButtonSelected={onItemSelect}
             cardStyle={cardItemStyle}
           />
-        </TouchableOpacity>
       ))}
     </ContainerList>
   );

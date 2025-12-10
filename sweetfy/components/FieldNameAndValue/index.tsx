@@ -20,8 +20,10 @@ const FieldNameAndValue: React.FC<FieldNameAndValueProps> = ({
   contentStyle,
 }) => {
   return (
-    <View style={[styles.viewDetails, contentStyle]}>
+    <View style={[styles.viewDetails, contentStyle]}>      
+     <View style={[styles.viewValue]}>
       <Text style={[styles.text, nameStyle]}>{name}</Text>
+    </View>
       <Text style={[styles.textValue, valueStyle]}>{value} </Text>
     </View>
   );
@@ -44,6 +46,11 @@ const styles = StyleSheet.create({
     fontFamily: 'Montserrat',
     fontSize: 21,
   },
+
+  viewValue: {
+    flexDirection: 'row',
+    gap: 20,
+  }
 });
 
 export default FieldNameAndValue;

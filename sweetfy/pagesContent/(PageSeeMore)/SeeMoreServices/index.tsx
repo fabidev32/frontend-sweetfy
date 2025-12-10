@@ -7,32 +7,32 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { useRouter } from 'expo-router';
-import ListIngredientsSeeMore from '@/components/ListOfCards/ListIngredientsSeeMore'
+import ListServicesSeeMore from '@/components/ListOfCards/ListServicesSeeMore'
 import { ContainerHomePage, ViewTitle, ContainerTitle, Title } from './style';
 import DinamicButton from '@/components/Buttons/index'
-import { IIngredientData } from './type'
-import { fetchAllIngredients } from './../../../api/homePage/getItem'
+import { IServiceData } from './type'
+import { fetchAllServices } from './../../../api/homePage/getItem'
 
 
 
 const SeeMoreIngredients = () => {
   const [isSelectionModeActive, setIsSelectionModeActive] = useState(false);
   const [selectedItemIds, setSelectedItemIds] = useState<number[]>([]);
-  const [ingredient, setIngredients] = useState<IIngredientData[]>([]);
+  const [service, setServices] = useState<IServiceData[]>([]);
 
   useEffect(() => {
-    fetchAllIngredients(setIngredients);
+    fetchAllServices(setServices);
   }, []);
 
 
   const router = useRouter();
-  const handleNavigateToDetailsIngredients = (ingredient: IIngredientData) => {
-    const ingredientDataString = JSON.stringify(ingredient);
+  const handleNavigateToDetailsServices = (service: IServiceData) => {
+    const serviceDataString = JSON.stringify(service);
 
     router.push({
-      pathname: '/DetailsIngredient',
+      pathname: '/DetailsService',
       params: {
-        ingredientData: ingredientDataString,
+        ingredientData: serviceDataString,
       },
     } as any);
   };
@@ -53,8 +53,8 @@ const SeeMoreIngredients = () => {
     setIsSelectionModeActive((prev) => !prev);
   };
   const handleSelectAllPress = () => {
-    const allIds = ingredient.map((p) => p.id);
-    const currentlyAllSelected = selectedItemIds.length === ingredient.length;
+    const allIds = service.map((p) => p.id);
+    const currentlyAllSelected = selectedItemIds.length === service.length;
 
     if (currentlyAllSelected) {
       setSelectedItemIds([]);
@@ -92,7 +92,7 @@ const SeeMoreIngredients = () => {
                 type="brownLight"
                 onPress={handleSelectAllPress}
                 buttonText={
-                  selectedItemIds.length === ingredient.length
+                  selectedItemIds.length === service.length
                     ? 'Remover'
                     : 'Todos'
                 }
@@ -177,13 +177,13 @@ const SeeMoreIngredients = () => {
 
           <ContainerTitle>
             <Title> Nome </Title>
-            <Title> Marca </Title>
+            <Title> Prestador </Title>
             <Title> Medidas </Title>
             <Title> Preço </Title>
           </ContainerTitle>
 
-          <ListIngredientsSeeMore
-            data={ingredient}
+          <ListServicesSeeMore
+            data={service}
             showSelectionControls={isSelectionModeActive}
             selectedItemIds={selectedItemIds}
             onItemSelect={toggleItemSelection}

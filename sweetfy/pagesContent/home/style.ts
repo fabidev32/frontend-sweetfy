@@ -12,6 +12,12 @@ export const TitleText = styled.Text`
   color: #5f3124;
 `;
 
+export const TextSeeMore = styled.Text`
+  font-size: 15px;
+  font-weight: bold;
+  color: #5f3124;
+  `;
+
 export const ViewButtonTitle = styled.View`
   display: flex;
   flex-direction: row;

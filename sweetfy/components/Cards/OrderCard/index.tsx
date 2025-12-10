@@ -55,6 +55,9 @@ const CardOrder: React.FC<CardOrderProps> = ({
     );
   };
 
+    const formatCurrency = (value: string) => `R$ ${value.replace('.', ',')}`;
+
+
   return (
     <ContainerWithCheckBox>
       {ControllerCheckBox()}
@@ -69,16 +72,16 @@ const CardOrder: React.FC<CardOrderProps> = ({
 
           <FieldNameAndValue
             name="Preço de venda:"
-            value={data.salePrice}
+            value={formatCurrency(data.salePrice.toString())}
           />
           <ContainerPrice>
             <ViewPrice>
               <TextCost> Custo total </TextCost>
-              <TextCost> {data.totalCost} </TextCost>
+              <TextCost> {formatCurrency(data.totalCost.toString())} </TextCost>
             </ViewPrice>
             <ViewPrice>
               <TextProfit> Lucro total </TextProfit>
-              <TextProfit> {data.profit} </TextProfit>
+              <TextProfit> {formatCurrency(data.profit.toString())} </TextProfit>
             </ViewPrice>
           </ContainerPrice>
 

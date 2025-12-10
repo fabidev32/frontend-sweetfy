@@ -1,7 +1,7 @@
-import SeeMoreRecipes from '@/pagesContent/(PageSeeMore)/SeeMoreRecipes';
+import SeeMoreIngredients from '@/pagesContent/(PageSeeMore)/SeeMoreIngredients';
 
-const SeeMoreRecipesPage = () => {
-  return <SeeMoreRecipes />;
+const SeeMoreIngredientsPage = () => {
+  return <SeeMoreIngredients />;
 };
 
-export default SeeMoreRecipesPage;
+export default SeeMoreIngredientsPage;
