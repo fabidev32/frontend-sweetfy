@@ -2,7 +2,7 @@ import axios from 'axios';
 import { getStorageItem, removeStorageItem, setStorageItem } from '../context/utils';
 import { router } from 'expo-router';
 
-export const API_URL = 'https://petrous-lilli-manfully.ngrok-free.dev';
+export const API_URL = 'https://diapedetic-jules-metaphoric.ngrok-free.dev';
 const api = axios.create({
   baseURL: `${API_URL}/api`, 
   headers:{

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { TouchableOpacity, ScrollView, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import {fetchAllRecipes, fetchAllOrders, fetchAllProducts} from './../../api/homePage/getItem'
-import { IRecipeData, IOrdersData, IProductData } from '@/api/homePage/type';
+import { IRecipeData, IOrdersData, IProductData, IIngredientsData} from '@/api/homePage/type';
 import { Title } from 'react-native-paper';
 import {
   ContainerListOFCards,
@@ -11,6 +11,7 @@ import {
 import ListOrders from '@/components/ListOfCards/ListOrders';
 import ListProducts from '@/components/ListOfCards/ListProducts';
 import ListRecipes from '@/components/ListOfCards/ListRecipes';
+import ListIngredients from '@/components/ListOfCards/ListIngredients';
  
 
 const HomePage = () => {
@@ -19,7 +20,8 @@ const HomePage = () => {
   const [products, setProducts]
   = useState <IProductData[]>([]);
   const [orders, setOrders] = useState <IOrdersData[]>([]);
-  
+    const [ingredients, setIngredients] = useState<IIngredientsData[]>([]);
+
   
   const router = useRouter();
   const handleNavigateToDetailsRecipe = (recipe: IRecipeData) => {
@@ -34,10 +36,8 @@ const HomePage = () => {
   };
   
   useEffect(() => {
-  fetchAllRecipes(setRecipes);
-}, []); 
-  fetchAllRecipes(setRecipes)
-
+    fetchAllRecipes(setRecipes);
+  }, []);
 
 
   const handleNavigateToDetailsProduct = (product: IProductData) => {
@@ -53,7 +53,6 @@ const HomePage = () => {
   useEffect(() => {
   fetchAllProducts(setProducts);
 }, []);
-  fetchAllProducts(setProducts);
 
 
   const handleNavigateToDetailsOrder = (order: IOrdersData) => {
@@ -69,7 +68,20 @@ const HomePage = () => {
   useEffect(() => {
   fetchAllOrders(setOrders);
 }, []);
-fetchAllOrders(setOrders)
+
+const handleNavigateToDetailsIngredients = (ingredient: IIngredientsData) => {
+    const ingredientDataString = JSON.stringify(ingredient);
+    router.push({
+      pathname: '/DetailsIngredients',
+      params: {
+        ingredientData: ingredientDataString,
+      },
+    } as any);
+  };
+  
+  useEffect(() => {
+  fetchAllOrders(setIngredients);
+}, []);
 
 
 
@@ -83,8 +95,7 @@ fetchAllOrders(setOrders)
               onPress={() => router.push('/seeMoreRecipes')}
               style={{ margin: 10 }}
             >
-              {' '}
-              Ver mais{' '}
+              Ver mais
             </TouchableOpacity>
           </ViewButtonTitle>
           <ScrollView
@@ -110,8 +121,7 @@ fetchAllOrders(setOrders)
               onPress={() => router.push('/(tabs)/seeMoreProducts')}
               style={{ margin: 10 }}
             >
-              {' '}
-              Ver mais{' '}
+              Ver mais
             </TouchableOpacity>
           </ViewButtonTitle>
 
@@ -138,8 +148,7 @@ fetchAllOrders(setOrders)
               onPress={() => router.push('/seeMoreOrders')}
               style={{ margin: 10 }}
             >
-              {' '}
-              Ver mais{' '}
+              Ver mais
             </TouchableOpacity>
           </ViewButtonTitle>
 
@@ -156,6 +165,33 @@ fetchAllOrders(setOrders)
               }}
               cardItemStyle={{}}
             ></ListOrders>
+          </ScrollView>
+        </View>
+
+        <View>
+          <ViewButtonTitle>
+            <Title> Ingredientes </Title>
+            <TouchableOpacity
+              onPress={() => router.push('/seeMoreIngredients')}
+              style={{ margin: 10 }}
+            >
+              Ver mais
+            </TouchableOpacity>
+          </ViewButtonTitle>
+
+          <ScrollView
+            horizontal={true}
+            showsHorizontalScrollIndicator={false}
+          >
+            <ListIngredients
+              onCardPress={handleNavigateToDetailsIngredients}
+              data={ingredients}
+              style={{
+                flexDirection: 'row',
+                margin: 10,
+              }}
+              cardItemStyle={{}}
+            ></ListIngredients>
           </ScrollView>
         </View>
       </ContainerListOFCards>

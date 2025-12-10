@@ -4,9 +4,9 @@ import { IRecipeData } from './type';
 import { useLocalSearchParams } from 'expo-router';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import FieldNameAndValue from '@/components/FieldNameAndValue';
-import { applyRecipeMargin } from '@/components/ListOfCards/utils';
-import Ingredients from '@/pagesContent/registerItems/ingredients';
-import Service from '@/pagesContent/(PageDetails)/DetailsOrder/Items/Services';
+import { applyRecipeMargin } from './../../../components/ListOfCards/utils';
+import Ingredients from './Items/Ingredients/index';
+import Service from './Items/Services/index';
 import {
   PageText,
   ViewContainer,
@@ -136,11 +136,12 @@ const PageDetailsRecipe = () => {
             <View>
               {recipe.recipeIngredients?.map((item) => (
                 <Ingredients
-                  key={item.id}
+                  key={item.id} 
                   data={item}
-                  onCostCalculated={updateIngredientCost}
+                  onCostCalculated={(cost, id) => console.log(cost, id)}
                 />
               ))}
+        
             </View>
 
             <View>

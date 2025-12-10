@@ -7,26 +7,26 @@ import {
   OrderId,
 } from './type';
 
+import api from '../pathConfiguration'; 
+
 type SetRecipesFunction = (data: IRecipeData[]) => void;
 type SetProductsFunction = (data: IProductData[]) => void;
 type SetOrdersFunction = (data: IOrdersData[]) => void;
 
-const endpointRecipes = 'http://localhost:5190/api/recipes';
+const endpointRecipes = '/recipes';
+const endpointProducts = '/products';
+const endpointOrders = '/orders';
 
 export const fetchAllRecipes = async (setRecipes: SetRecipesFunction) => {
   try {
-    const initialResponse = await fetch(endpointRecipes);
-    if (!initialResponse.ok) {
-      throw new Error(
-        `Erro de servidor ao buscar a lista de IDs: ${initialResponse.status}`
-      );
-    }
-    const listRecipesById: RecipeId[] = await initialResponse.json();
+    const initialResponse = await api.get<RecipeId[]>(endpointRecipes);
+    
+    const listRecipesById: RecipeId[] = initialResponse.data;
 
     const detailPromises = listRecipesById.map(async (item: RecipeId) => {
       const URL = `${endpointRecipes}/${item.id}`;
-      const response = await fetch(URL);
-      return response.json();
+      const response = await api.get<IRecipeData>(URL);
+      return response.data;
     });
 
     const allDetails = await Promise.all(detailPromises);
@@ -41,22 +41,15 @@ export const fetchAllRecipes = async (setRecipes: SetRecipesFunction) => {
   }
 };
 
-const endpointProducts = 'http://localhost:5190/api/products';
-
 export const fetchAllProducts = async (setProducts: SetProductsFunction) => {
   try {
-    const initialResponse = await fetch(endpointProducts);
-    if (!initialResponse.ok) {
-      throw new Error(
-        `Erro de servidor ao buscar a lista de IDs: ${initialResponse.status}`
-      );
-    }
-    const listProductsById: ProductId[] = await initialResponse.json();
+    const initialResponse = await api.get<ProductId[]>(endpointProducts);
+    const listProductsById: ProductId[] = initialResponse.data;
 
     const detailPromises = listProductsById.map(async (item: ProductId) => {
       const URL = `${endpointProducts}/${item.id}`;
-      const response = await fetch(URL);
-      return response.json();
+      const response = await api.get<IProductData>(URL);
+      return response.data;
     });
 
     const allDetails = await Promise.all(detailPromises);
@@ -71,22 +64,15 @@ export const fetchAllProducts = async (setProducts: SetProductsFunction) => {
   }
 };
 
-const endpointOrders = 'http://localhost:5190/api/orders';
-
 export const fetchAllOrders = async (setOrders: SetOrdersFunction) => {
   try {
-    const initialResponse = await fetch(endpointOrders);
-    if (!initialResponse.ok) {
-      throw new Error(
-        `Erro de servidor ao buscar a lista de IDs: ${initialResponse.status}`
-      );
-    }
-    const listOrdersById: OrderId[] = await initialResponse.json();
+    const initialResponse = await api.get<OrderId[]>(endpointOrders);
+    const listOrdersById: OrderId[] = initialResponse.data;
 
     const detailPromises = listOrdersById.map(async (item: OrderId) => {
       const URL = `${endpointOrders}/${item.id}`;
-      const response = await fetch(URL);
-      return response.json();
+      const response = await api.get<IOrdersData>(URL);
+      return response.data;
     });
 
     const allDetails = await Promise.all(detailPromises);

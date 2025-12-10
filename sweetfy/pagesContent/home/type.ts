@@ -1,3 +1,19 @@
+
+// Ingredientes 
+
+export interface IIngredientsData {
+  id: number;
+  name: string,
+  description: string,
+  brand: string,
+  quantity: number,
+  unit: string,
+  unitPrice: number
+}
+
+
+// Receitas
+
 export interface IRecipeData {
   id: number;
   name: string;
